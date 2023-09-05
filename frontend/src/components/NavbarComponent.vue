@@ -4,28 +4,27 @@
   <popup-component  v-if="menuOpened">
     <a class="rounded-md bg-blue-400 p-2" :href="logoutUrl">Cerrar Sesión</a>
   </popup-component>
-
-  <select :value="useViewStore().mode" @change="useViewStore().setMode($event?.target?.value); refreshPath()" class="lg:w-1/12 w-1/5 ml-auto h-3/4 rounded rounded-md text-black pl-2">
+  <select :value="useViewStore().mode" @change="useViewStore().setMode((<any>$event).target.value); refreshPath()" class="lg:w-1/12 w-1/5 ml-auto h-3/4 rounded rounded-md text-black pl-2">
     <option value="year">Año</option>
     <option value="month">Mes</option>
     <option value="week">Semana</option>
   </select>
   <!-- Time period -->
-  <select v-if="useViewStore().mode=='year'" :value="useViewStore().yearInterval" @change="useViewStore().setYearInterval($event?.target?.value); refreshPath()" class=" lg:w-1/12 w-1/2  h-3/4 mr-2 text-black rounded rounded-md text-black pl-2">
+  <select v-if="useViewStore().mode=='year'" :value="useViewStore().yearInterval" @change="useViewStore().setYearInterval((<any>$event).target.value); refreshPath()" class=" lg:w-1/12 w-1/2  h-3/4 mr-2 text-black rounded rounded-md text-black pl-2">
     <option value="12months">12 meses</option>
     <option :value="getYear(index)"  v-for="index in 4" :textContent="getYear(index)" />
   </select>
   <!-- Month -->
   <!--div v-if="viewType=='month'" class="lg:w-1/3 flex flex-row-reverse lg:gap-4 gap-2 h-3/4 self-center text-black"-->
-  <select v-if="useViewStore().mode=='month'" :value="useViewStore().month.year" @change="useViewStore().setMonthYear($event?.target?.value); refreshPath()" class="h-3/4 lg:w-1/12 w-16 rounded rounded-md lg:pl-2 text-black">
+  <select v-if="useViewStore().mode=='month'" :value="useViewStore().month.year" @change="useViewStore().setMonthYear((<any>$event).target.value); refreshPath()" class="h-3/4 lg:w-1/12 w-16 rounded rounded-md lg:pl-2 text-black">
     <option :key="index" v-for="index of 4" :textContent="getYear(index)" :value="getYear(index)"/>
   </select>
-  <select v-if="useViewStore().mode=='month'" :value="useViewStore().month.month" @change="useViewStore().setMonthMonth($event?.target?.value); refreshPath()" class="h-3/4 lg:w-1/12 lg:mr-2 w-28 rounded rounded-md lg:pl-2 text-black">
+  <select v-if="useViewStore().mode=='month'" :value="useViewStore().month.month" @change="useViewStore().setMonthMonth((<any>$event).target.value); refreshPath()" class="h-3/4 lg:w-1/12 lg:mr-2 w-28 rounded rounded-md lg:pl-2 text-black">
       <option :key="index" v-for="index of 12" :textContent="StringUtils.capitalize(DateUtils.getMonth(index))" :value="index"/>
     </select>
   <!-- /div-->
   <!-- Week -->
-  <input v-if="useViewStore().mode=='week'" :value="useViewStore().week" @change="useViewStore().setWeek($event?.target?.value); refreshPath()" type="date" step="7" min="3-1-2022" class="h-3/4 rounded rounded-md text-black mr-2"/>
+  <input v-if="useViewStore().mode=='week'" :value="useViewStore().week" @change="useViewStore().setWeek((<any>$event).target.value); refreshPath()" type="date" step="7" min="3-1-2022" class="h-3/4 rounded rounded-md text-black mr-2"/>
 </nav>
 </template>
 <script setup lang="ts">
@@ -35,7 +34,8 @@ import {DateUtils} from "@/libs/dateutils";
 import {StringUtils} from "@/libs/stringutils";
 import {useViewStore} from "@/stores/viewstore";
 import PopupComponent from "@/components/PopupComponent.vue";
-import {logOut, logoutUrl} from "@/auth/auth";
+// @ts-ignore
+import { logoutUrl } from "@/auth/auth";
 
 let viewType = ref("year")
 let currentYear : number;

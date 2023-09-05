@@ -9,6 +9,10 @@ export type CalendarEventType = {
     color: string
 }
 
+export type CalendarEventMap = {
+    [date: string]: CalendarEvent[]
+}
+
 export type CalendarPeriod = {
     name: string
     color: string

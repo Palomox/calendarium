@@ -28,7 +28,7 @@
 import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
 import EditDayComponent from "@/components/PopupComponent.vue";
 import {useEventStore} from "@/stores/eventstore";
-import type {CalendarEvent, CalendarPeriod} from "@/libs/types";
+import type {CalendarEvent, CalendarEventType, CalendarPeriod} from "@/libs/types";
 import PopupComponent from "@/components/PopupComponent.vue";
 import EntryComponent from "@/components/EntryComponent.vue";
 import PeriodComponent from "@/components/PeriodComponent.vue";
@@ -47,7 +47,7 @@ let editing = ref(false)
 
 let dayString = props.day+"-"+props.month+"-"+props.year;
 
-let eventsForToday = useEventStore().events[dayString]
+let eventsForToday : CalendarEvent[] = []
 
 let periodsForToday = ref<CalendarPeriod[]>([])
 
@@ -64,10 +64,10 @@ const getInlineStyles = computed(() => {
 
 
   let colorHex;
-  if (eventsForToday.value == undefined) {
+  if (eventsForToday.length == 0) {
     colorHex = "#ffffff"
   } else {
-    colorHex = eventsForToday.value[0].type.color
+    colorHex = eventsForToday[0].type.color
   }
   let textColor = 'color: ' + colorHex + ';'
 

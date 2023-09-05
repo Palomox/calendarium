@@ -1,15 +1,15 @@
 import {defineStore} from "pinia";
 import {reactive, ref} from "vue";
-import type {CalendarEvent, CalendarPeriod} from "@/libs/types";
+import type {CalendarEvent, CalendarEventMap, CalendarEventType, CalendarPeriod} from "@/libs/types";
 import axios from "axios";
 
 
 const apiPath = "https://calendar-api.hopoke.workers.dev/api/v1"
 
 export const useEventStore = defineStore('event', () => {
-    const events = reactive({})
+    let events = reactive<CalendarEventMap>({})
 
-    const eventTypes = ref([])
+    const eventTypes = ref<CalendarEventType[]>([])
 
     eventTypes.value[0] = {
         name: "global",
@@ -28,7 +28,7 @@ export const useEventStore = defineStore('event', () => {
     )
 
     function getEventsForDay(day: string) : CalendarEvent[] {
-        let eventsForDay = events.value[day]
+        let eventsForDay = events[day]
 
         return eventsForDay == null ? [] : eventsForDay
     }
@@ -46,7 +46,7 @@ export const useEventStore = defineStore('event', () => {
 
     function fetchEventsFromApi(){
         axios.get(apiPath+"events").then((response) => {
-            events.value = response.data
+            events = response.data
         });
     }
 

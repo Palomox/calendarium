@@ -45,7 +45,7 @@ export const useEventStore = defineStore('event', () => {
     }
 
     function fetchEventsFromApi(){
-        axios.get(apiPath+"events").then((response) => {
+        axios.create({withCredentials: true}).get(apiPath+"events").then((response) => {
             events = response.data
         });
     }

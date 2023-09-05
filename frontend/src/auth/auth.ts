@@ -9,7 +9,7 @@ export let ory = new FrontendApi({
     basePath: "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com",
     isJsonMime: (mime: string) => {return mime == "application/json"},
     baseOptions: {
-        includeCredentials: true
+        withCredentials: true
     }
 })
 

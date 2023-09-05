@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from "@/views/HomeView.vue";
-import YearView from "@/views/YearView.vue";
 import {useViewStore} from "@/stores/viewstore";
 import {logoutUrl, ory, session} from "@/auth/auth";
 
@@ -43,10 +42,10 @@ router.beforeEach(async (from, to) => {
       session.value = result.data
 
       ory.createBrowserLogoutFlow().then(({data}) => {
-        logoutUrl.value = data.logout_url+"&return_to="+window.location.href
+        logoutUrl.value = data.logout_url+"&return_to="+window.location.origin
       })
     } catch (e) {
-      window.location.href = "/.ory/ui/login?return_to="+window.location.href
+      window.location.href = window.location.origin+"/.ory/ui/login?return_to="+window.location.origin
     }
   }
 })

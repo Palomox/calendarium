@@ -45,7 +45,7 @@ router.beforeEach(async (from, to) => {
         logoutUrl.value = data.logout_url+"&return_to="+window.location.origin
       })
     } catch (e) {
-      window.location.href = window.location.origin+"/.ory/ui/login?return_to="+window.location.origin
+      window.location.href = "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/ui/login?return_to="+window.location.origin
     }
   }
 })

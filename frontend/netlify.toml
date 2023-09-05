@@ -3,4 +3,7 @@
     to = "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:splat"
     status = 200
     force = true
-
+[[redirects]]
+    from = "/*"
+    to = "/index.html"
+    status = 200

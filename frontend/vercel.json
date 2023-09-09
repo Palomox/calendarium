@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/.ory/:path*",
+      "destination": "/auth/handler.ts"
+    },
+    {
       "source": "/((?!.ory/.*).*)",
       "destination": "/index.html"
     }

@@ -11,10 +11,10 @@ const proxy = createProxyMiddleware({
     onProxyRes(proxyRes){
         let cookiesSet = proxyRes.headers["set-cookie"]
         let newCookies :string[] = []
-        const regex = /.*.oryapis.com/gi
+        const regex = /Domain=.*.oryapis.com/gi
 
         for(let cookie of cookiesSet){
-            newCookies[newCookies.length] = cookie.replaceAll(regex, "calendarium.vercel.app")
+            newCookies[newCookies.length] = cookie.replaceAll(regex, "Domain=calendarium.vercel.app")
         }
 
         console.log(JSON.stringify(newCookies))

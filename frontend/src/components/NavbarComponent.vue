@@ -1,6 +1,6 @@
 <template>
 <nav class="bg-zinc-800  shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8  w-full flex flex-row lg:gap-4 gap-1">
-  <button @click="toggleMenu" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" to="/">Calendario</button>
+  <button @click="toggleMenu" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" to="/">Calendarium</button>
   <popup-component  v-if="menuOpened">
     <a class="rounded-md bg-blue-400 p-2" :href="logoutUrl">Cerrar Sesión</a>
   </popup-component>

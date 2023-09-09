@@ -1,28 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/.ory/:match*",
-      "destination": "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:match*"
-    },
-    {
-      "source": "/.ory/:match*/",
-      "destination": "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:match*/"
-    },
-    {
       "source": "/((?!.ory/.*).*)",
       "destination": "/index.html"
-    }
-  ],
-  "redirects": [
-    {
-      "permanent": true,
-      "source": "/ui/:match*",
-      "destination": "/.ory/ui/:match*"
-    },
-    {
-      "permanent": true,
-      "source": "/ui/:match*/",
-      "destination": "/.ory/ui/:match*/"
     }
   ]
 }

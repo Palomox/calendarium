@@ -31,6 +31,8 @@ const proxy = createProxyMiddleware({
                 proxyRes.headers["set-cookie"] = newCookies
             }
 
+            return newBody
+
 
 
         })

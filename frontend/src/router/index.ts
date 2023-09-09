@@ -36,11 +36,6 @@ const router = createRouter({
 })
 
 router.beforeEach(async (from, to) => {
-  if(window.location.pathname.startsWith("/ui")){
-    window.alert(window.location.pathname)
-    window.location.href = window.location.origin+"/.ory"+window.location.pathname
-  }
-
   if(session.value == undefined) {
     try {
       let result = await ory.toSession()

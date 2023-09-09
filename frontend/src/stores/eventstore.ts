@@ -45,9 +45,13 @@ export const useEventStore = defineStore('event', () => {
     }
 
     function fetchEventsFromApi(){
-        axios.create({withCredentials: true}).get(apiPath+"events").then((response) => {
+        fetch(apiPath+"events", {credentials: "include"}).then((response) => {
+            events = response.json()
+        })
+
+        /*axios.get(apiPath+"events", {withCredentials: true}).then((response) => {
             events = response.data
-        });
+        });*/
     }
 
     return {events, getEventsForDay, periods, getPeriodsForDate, eventTypes, fetchEventsFromApi }

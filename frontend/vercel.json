@@ -1,15 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/auth/:match*",
+      "source": "/.ory/:match*",
       "destination": "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:match*"
     },
     {
-      "source": "/auth/:match*/",
+      "source": "/.ory/:match*/",
       "destination": "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:match*/"
     },
     {
-      "source": "/((?!auth\/.*).*)",
+      "source": "/((?!.ory/.*).*)",
       "destination": "/index.html"
     }
   ],
@@ -17,12 +17,12 @@
     {
       "permanent": true,
       "source": "/ui/:match*",
-      "destination": "/auth/ui/:match*"
+      "destination": "/.ory/ui/:match*"
     },
     {
       "permanent": true,
       "source": "/ui/:match*/",
-      "destination": "/auth/ui/:match*/"
+      "destination": "/.ory/ui/:match*/"
     }
   ]
 }

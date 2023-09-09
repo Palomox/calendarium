@@ -36,6 +36,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (from, to) => {
+  if(window.location.pathname.startsWith("/ui")){
+    window.alert(window.location.pathname)
+    window.location.href = window.location.origin+"/.ory"+window.location.pathname
+  }
+
   if(session.value == undefined) {
     try {
       let result = await ory.toSession()
@@ -45,7 +50,7 @@ router.beforeEach(async (from, to) => {
         logoutUrl.value = data.logout_url+"&return_to="+window.location.origin
       })
     } catch (e) {
-      window.location.href = "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/ui/login?return_to="+window.location.origin
+      window.location.href = "/.ory/ui/login?return_to="+window.location.origin
     }
   }
 })

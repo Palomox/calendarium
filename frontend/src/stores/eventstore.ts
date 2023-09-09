@@ -46,6 +46,7 @@ export const useEventStore = defineStore('event', () => {
 
     function fetchEventsFromApi(){
         fetch(apiPath+"events", {credentials: "include"}).then((response) => {
+            // @ts-ignore
             events = response.json()
         })
 

@@ -27,6 +27,7 @@ onBeforeMount(async () => {
   let data = (await ory.createBrowserLoginFlow({})).data;
 
   flow = data.id;
+  // @ts-ignore
   csrfToken = data.ui.nodes[0].attributes.value
 })
 async function login(){

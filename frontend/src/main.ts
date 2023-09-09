@@ -23,8 +23,8 @@ router.beforeEach(async (to, from) => {
                 let result = await ory.toSession()
                 session.value = result.data
 
-                ory.createBrowserLogoutFlow().then(({data}) => {
-                    logoutUrl.value = data.logout_url + "&return_to=" + window.location.origin
+                ory.createBrowserLogoutFlow({returnTo: window.location.origin}).then(({data}) => {
+                    logoutUrl.value = data.logout_url.replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/", "https://calendarium.vercel.app/.ory/")
                 })
             } catch (e) {
                 return {name: "Login"}

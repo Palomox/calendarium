@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/.ory/:match*",
+      "destination": "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:match*"
+    },
+    {
+      "source": "/*",
+      "destination": "/index.html"
+    }
+  ]
+}

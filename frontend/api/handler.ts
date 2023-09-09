@@ -8,34 +8,24 @@ const proxy = createProxyMiddleware({
     pathRewrite: {
         "^/.ory": "" // strip .ory from the url
     },
-    selfHandleResponse: true,
-    on: {
-        proxyRes: responseInterceptor((responseBuffer, proxyRes, req, res) => {
-            let cookiesSet = proxyRes.headers["set-cookie"]
-            let newCookies :string[] = []
+    onProxyRes(proxyRes) {
+        let cookiesSet = proxyRes.headers["set-cookie"]
+        let newCookies :string[] = []
 
-            const bodyString = responseBuffer.toString('utf8')
+        if(cookiesSet != undefined){
+            const regex = /Domain=.*.oryapis.com/gi
 
-            let newBody = bodyString.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/", "https://calendarium.vercel.app/.ory/")
-
-            console.log("old: "+bodyString)
-            console.log("new: "+newBody)
-
-
-            if(cookiesSet != undefined){
-                const regex = /Domain=.*.oryapis.com/gi
-
-                for(let cookie of cookiesSet){
-                    newCookies[newCookies.length] = cookie.replaceAll(regex, "Domain=calendarium.vercel.app")
-                }
-                proxyRes.headers["set-cookie"] = newCookies
+            for(let cookie of cookiesSet){
+                newCookies[newCookies.length] = cookie.replaceAll(regex, "Domain=calendarium.vercel.app")
             }
+            proxyRes.headers["set-cookie"] = newCookies
+        }
 
-            return bodyString
+        let location = proxyRes.headers["location"];
 
-
-
-        })
+        if(location != undefined){
+            proxyRes.headers["location"].replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app")
+        }
     }
 })
 export default function handler(

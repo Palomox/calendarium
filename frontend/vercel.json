@@ -5,6 +5,10 @@
       "destination": "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:match*"
     },
     {
+      "source": "/auth/:match*/",
+      "destination": "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/:match*/"
+    },
+    {
       "source": "/((?!auth\/.*).*)",
       "destination": "/index.html"
     }
@@ -14,6 +18,11 @@
       "permanent": true,
       "source": "/ui/:match*",
       "destination": "/auth/ui/:match*"
+    },
+    {
+      "permanent": true,
+      "source": "/ui/:match*/",
+      "destination": "/auth/ui/:match*/"
     }
   ]
 }

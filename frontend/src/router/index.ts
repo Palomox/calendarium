@@ -45,7 +45,7 @@ router.beforeEach(async (from, to) => {
         logoutUrl.value = data.logout_url+"&return_to="+window.location.origin
       })
     } catch (e) {
-      window.location.href = "/auth/ui/login?return_to="+window.location.origin
+      window.location.href = "/auth/ui/login?aal=aal1&refresh=false&return_to="+window.location.origin
     }
   }
 })

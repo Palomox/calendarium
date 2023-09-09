@@ -24,7 +24,7 @@ const proxy = createProxyMiddleware({
         let location = proxyRes.headers["location"];
 
         if(location != undefined){
-            proxyRes.headers["location"].replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app")
+            proxyRes.headers["location"].replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app/.ory")
         }
     }
 })

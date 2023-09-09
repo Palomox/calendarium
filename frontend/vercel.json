@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/.ory/:path*",
-      "destination": "/auth/handler.ts"
+      "destination": "/api/handler.ts"
     },
     {
       "source": "/((?!.ory/.*).*)",

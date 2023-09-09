@@ -6,7 +6,7 @@ export let session = ref<Session|undefined>(undefined)
 export let logoutUrl = ref("")
 
 export let ory = new FrontendApi({
-    basePath: "/auth",
+    basePath: "/.ory",
     isJsonMime: (mime: string) => {return mime == "application/json"},
     baseOptions: {
         withCredentials: true

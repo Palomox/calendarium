@@ -10,11 +10,14 @@ const proxy = createProxyMiddleware({
     },
     onProxyRes(proxyRes){
         let cookiesSet = proxyRes.headers["set-cookie"]
+        let newCookies :string[] = []
 
         for(let cookie of cookiesSet){
-            console.log(cookie)
-            cookie.replace("romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "calendarium.vercel.app")
+            newCookies[newCookies.length] = cookie.replaceAll("romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "calendarium.vercel.app")
         }
+
+        console.log(JSON.stringify(newCookies))
+        proxyRes.headers["set-cookie"] = newCookies
     }
 })
 export default function handler(

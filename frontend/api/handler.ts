@@ -13,7 +13,7 @@ const proxy = createProxyMiddleware({
         let newCookies :string[] = []
 
         for(let cookie of cookiesSet){
-            newCookies[newCookies.length] = cookie.replaceAll("*.oryapis.com", "calendarium.vercel.app")
+            newCookies[newCookies.length] = cookie.replaceAll("/.*.oryapis.com", "calendarium.vercel.app")
         }
 
         console.log(JSON.stringify(newCookies))

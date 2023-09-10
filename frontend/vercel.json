@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/:match*",
+      "destination": "https://calendarium-api.hopoke.workers.dev/api/:match*"
+    },
+    {
       "source": "/.ory/:path*",
       "destination": "/api/handler.ts"
     },

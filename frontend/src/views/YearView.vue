@@ -33,7 +33,10 @@ onBeforeMount(() => {
   useViewStore().setMode('year')
   useViewStore().setYearInterval(<string>props.year)
 
-  useEventStore().fetchEventsFromApi()
+  setTimeout(() => {
+    useEventStore().fetchEventsFromApi()
+  }, 5000)
+
 })
 
 </script>

@@ -4,8 +4,7 @@ import type {CalendarEvent, CalendarEventMap, CalendarEventType, CalendarPeriod}
 import axios from "axios";
 
 
-const apiPath = "https://calendar-api.hopoke.workers.dev/api/v1/"
-
+const apiPath = import.meta.env.VITE_API_PATH;
 export const useEventStore = defineStore('event', () => {
     let events = reactive<CalendarEventMap>({})
 

@@ -1,0 +1,21 @@
+{
+  "name": "calendar-api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "start": "wrangler dev"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230419.0",
+    "@types/pg": "^8.10.2",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "@haverstack/axios-fetch-adapter": "^0.8.0",
+    "@ory/client": "^1.1.51",
+    "itty-router": "^4.0.22",
+    "pg": "^8.11.3"
+  }
+}

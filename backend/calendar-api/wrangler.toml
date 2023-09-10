@@ -1,0 +1,7 @@
+name = "calendar-api"
+main = "src/worker.ts"
+compatibility_date = "2023-08-21"
+node_compat = true
+
+[vars]
+ORY_PATH="https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com"

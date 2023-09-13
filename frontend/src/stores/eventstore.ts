@@ -1,33 +1,28 @@
 import {defineStore} from "pinia";
-import {reactive, ref} from "vue";
-import type {CalendarEvent, CalendarEventMap, CalendarEventType, CalendarPeriod} from "@/libs/types";
+import {ref} from "vue";
+import type {
+    CalendarEvent,
+    CalendarEventMap,
+    CalendarEventTypeMap,
+    CalendarPeriod,
+    CalendarTaskMap
+} from "@/libs/types";
 import axios from "axios";
 
 
-const apiPath = import.meta.env.VITE_API_PATH;
+export const apiPath = import.meta.env.VITE_API_PATH;
+
 export const useEventStore = defineStore('event', () => {
-    let events = reactive<CalendarEventMap>({})
+    const events = ref<{events: CalendarEventMap}>({events: {}})
 
-    const eventTypes = ref<CalendarEventType[]>([])
+    const eventTypes = ref<{event_types: CalendarEventTypeMap}>({event_types: {}})
 
-    eventTypes.value[0] = {
-        name: "global",
-        prefix: "",
-        color: "#d9b81e"
-    }
+    const periods = ref<{periods: CalendarPeriod[]}>({periods: []})
 
-    const periods = ref(
-        [{
-            name: "1er cuatrimestre",
-            color: "#003dff",
-            startDate: new Date(2023, 8, 4).getTime()/1000,
-            endDate: new Date(2023, 11, 14).getTime()/1000,
-            priority: 1
-        }]
-    )
+    const tasks = ref<{tasks: CalendarTaskMap}>({tasks: {}})
 
     function getEventsForDay(day: string) : CalendarEvent[] {
-        let eventsForDay = events[day]
+        let eventsForDay = events.value.events[day]
 
         return eventsForDay == null ? [] : eventsForDay
     }
@@ -35,24 +30,48 @@ export const useEventStore = defineStore('event', () => {
     function getPeriodsForDate(date: Date) : CalendarPeriod[] {
         let periodsForToday: CalendarPeriod[] = []
 
-        for (let period of periods.value) {
-            if(period.startDate<=date.getTime()/1000 && date.getTime()/1000<=period.endDate){
+        for (let period of periods.value.periods) {
+            if(period.startdate<=date.getTime()/1000 && date.getTime()/1000<=period.enddate){
                 periodsForToday[periodsForToday.length] = period
             }
         }
         return periodsForToday;
     }
 
-    function fetchEventsFromApi(){
-        fetch(apiPath+"events", {credentials: "include"}).then((response) => {
-            // @ts-ignore
-            events = response.json()
-        })
-
-        /*axios.get(apiPath+"events", {withCredentials: true}).then((response) => {
-            events = response.data
-        });*/
+    function fetchEventsFromApi(intialDate?: string, finalDate?: string){
+        axios.get(apiPath+"events", {withCredentials: true, params: {
+                startDate: intialDate,
+                endDate: finalDate
+            }}).then((response) => {
+            events.value.events = <CalendarEventMap>response.data
+        });
+    }
+    function fetchEventTypesFromApi(){
+        axios.get(apiPath+"events/types", {withCredentials: true}).then((response) => {
+            eventTypes.value.event_types = <CalendarEventTypeMap>response.data
+        });
+    }
+    function fetchPeriodsFromApi(){
+        axios.get(apiPath+"periods", {withCredentials: true}).then((response) => {
+            periods.value.periods = <CalendarPeriod[]>response.data.periods
+        });
+    }
+    function fetchTasksFromApi(intialDate?: string, finalDate?: string){
+        axios.get(apiPath+"tasks", {withCredentials: true, params: {
+                startDate: intialDate,
+                endDate: finalDate
+            }}).then((response) => {
+            tasks.value.tasks = <CalendarTaskMap>response.data
+        });
     }
 
-    return {events, getEventsForDay, periods, getPeriodsForDate, eventTypes, fetchEventsFromApi }
+    function fetchAllFromApi(initialDate?: string, finalDate?: string) {
+        fetchEventsFromApi(initialDate, finalDate)
+        fetchEventTypesFromApi()
+        fetchPeriodsFromApi()
+        fetchTasksFromApi(initialDate, finalDate)
+    }
+
+
+    return {events, getEventsForDay, periods, getPeriodsForDate, eventTypes, tasks, fetchEventsFromApi, fetchPeriodsFromApi, fetchTasksFromApi, fetchEventTypesFromApi, fetchAllFromApi }
 })

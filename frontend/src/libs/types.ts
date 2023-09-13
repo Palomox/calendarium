@@ -1,5 +1,5 @@
 export type CalendarEvent = {
-    type: CalendarEventType
+    type: string
     label: string
 }
 
@@ -7,6 +7,20 @@ export type CalendarEventType = {
     name: string
     prefix: string
     color: string
+    new?:boolean
+}
+
+export type CalendarEventTypeMap = {
+    [name: string]: CalendarEventType
+}
+
+export type CalendarTask = {
+    label: string
+    completed: boolean
+}
+
+export type CalendarTaskMap = {
+    [date: string]: CalendarTask[]
 }
 
 export type CalendarEventMap = {
@@ -16,7 +30,8 @@ export type CalendarEventMap = {
 export type CalendarPeriod = {
     name: string
     color: string
-    startDate: number
-    endDate: number
+    startdate: number
+    enddate: number
     priority: number
+    new?:boolean
 }

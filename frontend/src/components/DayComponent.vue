@@ -11,7 +11,7 @@
         <button @click="toggleEditing" class="ml-auto">Edit</button>
       </div>
       <div class="relative flex flex-col items-start">
-        <h1 class="font-bold text-xl text-left mb-1" v-text="eventsForToday==undefined? 'No hay eventos.' : 'Eventos:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" v-text="eventsForToday.length == 0? 'No hay eventos.' : 'Eventos:'"/>
         <div v-if="editing">
 
         </div>
@@ -28,7 +28,7 @@
 import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
 import EditDayComponent from "@/components/PopupComponent.vue";
 import {useEventStore} from "@/stores/eventstore";
-import type {CalendarEvent, CalendarEventType, CalendarPeriod} from "@/libs/types";
+import type {CalendarEvent, CalendarEventType, CalendarPeriod, CalendarTask} from "@/libs/types";
 import PopupComponent from "@/components/PopupComponent.vue";
 import EntryComponent from "@/components/EntryComponent.vue";
 import PeriodComponent from "@/components/PeriodComponent.vue";
@@ -47,27 +47,50 @@ let editing = ref(false)
 
 let dayString = props.day+"-"+props.month+"-"+props.year;
 
-let eventsForToday : CalendarEvent[] = []
+let eventsForToday = ref<CalendarEvent[]>([])
 
 let periodsForToday = ref<CalendarPeriod[]>([])
 
-let mainPeriod = ref<CalendarPeriod | undefined>(undefined)
+let tasksForToday = ref<CalendarTask[]>([])
 
 function toggleEditing() {
   editing.value = !editing.value;
 }
 
-//watch(eventsStore.events, loadFromPinia)
+watch(useEventStore().events, () => {
+  let events = useEventStore().events.events[dayString];
+  eventsForToday.value = events == undefined ? [] : events;
+})
+watch(useEventStore().periods, () => {
+  let periods : CalendarPeriod[] = [];
+  let date = new Date(props.year, props.month-1, props.day).getTime()/1000
+  for (let period of useEventStore().periods.periods) {
+    if(period.startdate <= date && date <= period.enddate){
+      // Included
+      periods[periods.length] = period
+    }
+  }
+
+  periodsForToday.value = periods.sort((one, two) => {
+    return two.priority-one.priority
+  })
+})
+watch(useEventStore().tasks, () => {
+  let tasks = useEventStore().tasks.tasks[dayString];
+  tasksForToday.value = tasks;
+})
+
+
 
 const getInlineStyles = computed(() => {
-  let bgColor = mainPeriod.value != undefined ? 'background-color: ' + mainPeriod.value.color + '; ' : '';
+  let bgColor = periodsForToday.value.length != 0? 'background-color: ' + periodsForToday.value[0].color + '; ' : '';
 
 
   let colorHex;
-  if (eventsForToday.length == 0) {
+  if (eventsForToday.value.length == 0) {
     colorHex = "#ffffff"
   } else {
-    colorHex = eventsForToday[0].type.color
+    colorHex = useEventStore().eventTypes.event_types[eventsForToday.value[0].type].color
   }
   let textColor = 'color: ' + colorHex + ';'
 
@@ -82,27 +105,6 @@ function openDetails() {
 function closeDetails() {
   detailsOpen.value = false;
 }
-
-/*function loadFromPinia() {
-  periodsForToday.value = useEventStore().getPeriodsForDate(new Date(props.year, props.month - 1, props.day))
-
-  let max = 0;
-  let maxPriority = 0;
-  for (let i = 0; i > periodsForToday.value.length; i++) {
-    if (periodsForToday.value[i].priority > maxPriority) {
-      maxPriority = periodsForToday.value[i].priority;
-      max = i;
-    }
-  }
-
-  mainPeriod.value = periodsForToday.value[max]
-
-  eventsForToday.value = useEventStore().getEventsForDay(props.day + "-" + props.month + "-" + props.year)
-}*/
-
-
-
-
 </script>
 <style scoped>
 </style>

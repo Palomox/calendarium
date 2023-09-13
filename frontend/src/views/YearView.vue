@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import {DateUtils} from "@/libs/dateutils";
 import MonthComponent from "@/components/MonthComponent.vue";
-import {onBeforeMount, onMounted, onUpdated, watch} from "vue";
+import {onBeforeMount, onMounted, onUpdated, watch, watchEffect} from "vue";
 import {useViewStore} from "@/stores/viewstore";
 import {useEventStore} from "@/stores/eventstore";
 
@@ -15,7 +15,6 @@ const props = defineProps<{
 }>();
 
 let years : {months: number[], years: number[]};
-
 
 onBeforeMount(() => {
   if(props.year == '12months') {
@@ -33,9 +32,7 @@ onBeforeMount(() => {
   useViewStore().setMode('year')
   useViewStore().setYearInterval(<string>props.year)
 
-  setTimeout(() => {
-    useEventStore().fetchEventsFromApi()
-  }, 5000)
+  useEventStore().fetchAllFromApi("1-"+years.months[0]+"-"+years.years[0], "31-"+years.months[years.months.length-1]+"-"+years.years[years.years.length-1])
 
 })
 

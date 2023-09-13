@@ -1,8 +1,13 @@
 <template>
 <nav class="bg-zinc-800  shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8  w-full flex flex-row lg:gap-4 gap-1">
   <button @click="toggleMenu" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" to="/">Calendarium</button>
-  <popup-component  v-if="menuOpened">
-    <a class="rounded-md bg-blue-400 p-2" :href="logoutUrl">Cerrar Sesión</a>
+  <popup-component class="z-50 top-16" v-if="menuOpened">
+    <div class="flex flex-col m-2 gap-2">
+      <a class="rounded-md bg-indigo-700 p-2" :href="logoutUrl">Cerrar Sesión</a>
+      <router-link to="/event_types" class="rounded-md bg-indigo-700 p-2">Editar tipos de eventos</router-link>
+      <router-link to="/periods" class="rounded-md bg-indigo-700 p-2">Editar periodos</router-link>
+      <router-link v-if="$route.meta.config != undefined && $route.meta.config == true" to="/" class="rounded-md bg-indigo-700 p-2">Volver al calendario</router-link>
+    </div>
   </popup-component>
   <select :value="useViewStore().mode" @change="useViewStore().setMode((<any>$event).target.value); refreshPath()" class="lg:w-1/12 w-1/5 ml-auto h-3/4 rounded rounded-md text-black pl-2">
     <option value="year">Año</option>

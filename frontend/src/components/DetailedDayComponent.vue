@@ -3,16 +3,16 @@
   <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center" :style="getInlineStyles" :textContent="props.day" @click="editDay"/>
   <popup-component class="relative left-16 bottom-8" v-if="editing" @close_edit="editDay">Hellloooooadkjsfgisfdjgn</popup-component>
   <div class="flex flex-col overflow-y-scroll relative p-2 gap-2">
-    <entry-component v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
+    <entry-component :key="calendarEvent.label" v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
   </div>
 </div>
 </template>
 <script setup lang="ts">
   import EntryComponent from "@/components/EntryComponent.vue";
   import EditDayComponent from "@/components/PopupComponent.vue";
-  import {computed, onBeforeMount, ref} from "vue";
+  import {computed, onBeforeMount, ref, watch} from "vue";
   import {useEventStore} from "@/stores/eventstore";
-  import type {CalendarEvent, CalendarPeriod} from "@/libs/types";
+  import type {CalendarEvent, CalendarPeriod, CalendarTask} from "@/libs/types";
   import PopupComponent from "@/components/PopupComponent.vue";
 
   const props = defineProps<{
@@ -24,18 +24,43 @@
   let editing = ref(false)
   let eventsForToday = ref<CalendarEvent[]>([])
   let periodsForToday = ref<CalendarPeriod[]>([])
+  let tasksForToday = ref<CalendarTask[]>([])
 
-  let mainPeriod = ref<CalendarPeriod | undefined>(undefined)
+  let dayString = props.day+"-"+props.month+"-"+props.year;
+
+  watch(useEventStore().events, () => {
+    let events = useEventStore().events.events[dayString];
+    eventsForToday.value = events == undefined ? [] : events;
+  })
+  watch(useEventStore().periods, () => {
+    let periods : CalendarPeriod[] = [];
+    let date = new Date(props.year, props.month-1, props.day).getTime()/1000
+    for (let period of useEventStore().periods.periods) {
+      if(period.startdate <= date && date <= period.enddate){
+        // Included
+        periods[periods.length] = period
+      }
+    }
+
+    periodsForToday.value = periods.sort((one, two) => {
+      return two.priority-one.priority
+    })
+  })
+  watch(useEventStore().tasks, () => {
+    let tasks = useEventStore().tasks.tasks[dayString];
+    tasksForToday.value = tasks;
+  })
+
 
   const getInlineStyles = computed(() => {
-    let bgColor = mainPeriod.value != undefined ? 'background-color: ' + mainPeriod.value.color + '; ' : '';
+    let bgColor = periodsForToday.value.length != 0? 'background-color: ' + periodsForToday.value[0].color + '; ' : '';
 
 
     let colorHex;
-    if (eventsForToday.value.length==0){
+    if (eventsForToday.value.length == 0) {
       colorHex = "#ffffff"
     } else {
-      colorHex = eventsForToday.value[0].type.color
+      colorHex = useEventStore().eventTypes.event_types[eventsForToday.value[0].type].color
     }
     let textColor = 'color: ' + colorHex + ';'
 
@@ -47,22 +72,6 @@
     editing.value = !editing.value;
   }
 
-  onBeforeMount(() => {
-    eventsForToday.value = useEventStore().getEventsForDay(props.day+"-"+props.month+"-"+props.year)
-
-    periodsForToday.value = useEventStore().getPeriodsForDate(new Date(props.year, props.month-1, props.day))
-
-    let max = 0;
-    let maxPriority = 0;
-    for(let i=0; i>periodsForToday.value.length; i++){
-      if(periodsForToday.value[i].priority>maxPriority){
-        maxPriority=periodsForToday.value[i].priority;
-        max = i;
-      }
-    }
-
-    mainPeriod.value = periodsForToday.value[max]
-  })
 </script>
 <style scoped>
 div>div{

@@ -41,6 +41,18 @@ const router = createRouter({
             name: "Login",
             path: "/login",
             component: () => import('../views/LoginView.vue')
+        },
+        {
+            name: "Edit Event Types",
+            path: "/event_types",
+            meta: {config: true},
+            component: () => import('../views/EditEventTypesView.vue')
+        },
+        {
+            name: "Edit Periods",
+            path: "/periods",
+            meta: {config: true},
+            component: () => import('../views/EditPeriodsView.vue')
         }
     ]
 })

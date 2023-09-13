@@ -7,6 +7,7 @@ import MonthComponent from "@/components/MonthComponent.vue";
 import {computed, onBeforeMount, onBeforeUnmount, ref} from "vue";
 import {useViewStore} from "@/stores/viewstore";
 import EditDayComponent from "@/components/PopupComponent.vue";
+import {useEventStore} from "@/stores/eventstore";
 
 const props = defineProps<{
   year: number
@@ -29,6 +30,9 @@ onBeforeMount(() => {
 
   addEventListener("resize", onResize)
 })
+
+useEventStore().fetchAllFromApi("1-"+props.month+"-"+props.year, "31-"+props.month+"-"+props.year)
+
 
 onBeforeUnmount(()=> {
   removeEventListener('resize', onResize)

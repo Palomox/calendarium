@@ -1,18 +1,25 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import {createPinia} from "pinia";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faCircleXmark} from "@fortawesome/free-regular-svg-icons";
 import {useEventStore} from "@/stores/eventstore";
-import type {Session} from "@ory/client";
 import {logoutUrl, ory, session} from "@/auth/auth";
 
+import "vue-toastification/dist/index.css"
+import type {PluginOptions} from "vue-toastification/dist/types/types";
+import VueToastificationPlugin, {POSITION} from "vue-toastification";
 
 
 const app = createApp(App)
 const pinia = createPinia();
 
+const options : PluginOptions = {
+    transition: "Vue-Toastification__fade",
+    position: POSITION.BOTTOM_RIGHT,
+    maxToasts: 20,
+}
 
 library.add(faCircleXmark)
 
@@ -37,7 +44,7 @@ router.beforeEach(async (to, from) => {
 
 app.use(router);
 app.use(pinia);
-
+app.use(VueToastificationPlugin, options)
 const eventStore = useEventStore()
 
 app.mount('#app')

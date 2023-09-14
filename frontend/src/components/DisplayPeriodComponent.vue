@@ -20,16 +20,14 @@
         <span v-if="!editing" v-text="'Inicio: '+new Date(period.startdate*1000).toLocaleDateString()" class="text-xl mr-2" />
         <div v-else>
           <label class="mr-2">Inicio: </label>
-          <input hidden v-model="period.startdate" type="text" class="text-black p-1 rounded-md">
-          <input @change="changeStartDate((<any>$event).target.value)" type="date" class="text-black rounded-md p-1">
+          <input @change="changeStartDate((<any>$event).target.value)" :value="startDateISO" type="date" class="text-black rounded-md p-1">
         </div>
       </div>
       <div>
         <span v-if="!editing" v-text="'Final: '+new Date(period.enddate*1000).toLocaleDateString()" class="text-xl mr-2" />
         <div v-else>
           <label class="mr-2">Final: </label>
-          <input hidden v-model="period.enddate" type="text" class="text-black p-1 rounded-md">
-          <input @change="changeEndDate((<any>$event).target.value)" type="date" class="text-black rounded-md p-1">
+          <input @change="changeEndDate((<any>$event).target.value)" :value="endDateISO" type="date" class="text-black rounded-md p-1">
         </div>
       </div>
 
@@ -47,7 +45,7 @@ import type {CalendarPeriod} from "@/libs/types";
 import axios from "axios";
 import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
-import {onBeforeMount, ref} from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 
 
 const props = defineProps<{
@@ -62,6 +60,17 @@ let period = ref<CalendarPeriod>(Object.assign({}, props.period))
 
 let isNew = ref(false)
 
+const startDateISO = computed(() => {
+  let date = new Date(period.value.startdate*1000);
+  return date.toISOString().substring(0, 10)
+})
+
+
+const endDateISO = computed(() => {
+  let date = new Date(period.value.enddate*1000)
+  return date.toISOString().substring(0, 10)
+})
+
 onBeforeMount(() => {
   if(period.value.new != undefined) {
     isNew.value = true
@@ -71,17 +80,21 @@ onBeforeMount(() => {
 
 function changeStartDate(date: any){
   let split = (<string>date).split("-");
-  for(let i of split){
-    console.log(Number(i))
 
-  }
-  let dateObject = new Date(0, 0, 0, 0, 0, 0, 0)
-  dateObject.setUTCFullYear(Number(split[0]), Number(split[2])-1, Number(split[1]))
-  console.log(dateObject.getTime())
+  let dateObject = new Date()
+  dateObject.setUTCFullYear(Number(split[0]), Number(split[1])-1, Number(split[2]))
+  dateObject.setUTCHours(0, 0, 0, 0)
+
+  period.value.startdate = dateObject.getTime()/1000
 }
 
 function changeEndDate(date: any) {
-  console.log(date)
+  let split = (<string>date).split("-");
+
+  let dateObject = new Date()
+  dateObject.setUTCFullYear(Number(split[0]), Number(split[1])-1, Number(split[2]))
+  dateObject.setUTCHours(0, 0, 0, 0)
+  period.value.enddate = dateObject.getTime()/1000
 }
 
 function saveType() {
@@ -92,6 +105,11 @@ function saveType() {
     endDate: period.value.enddate,
     priority: period.value.priority
   }, {
+    params: {
+      name: isNew.value ? undefined : props.period.name,
+      startDate: isNew.value ? undefined : props.period.startdate,
+      endDate: isNew.value ? undefined : props.period.enddate
+    },
     withCredentials: true
   }).then(response => {
     editing.value = false

@@ -65,6 +65,9 @@ function saveType() {
     color: eventType.value.color,
     prefix: eventType.value.prefix
   }, {
+    params: {
+      type: isNew.value ? undefined : props.eventType.name
+    },
     withCredentials: true
   }).then(response => {
     editing.value = false

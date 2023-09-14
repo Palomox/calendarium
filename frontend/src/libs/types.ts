@@ -1,6 +1,7 @@
 export type CalendarEvent = {
     type: string
     label: string
+    date: string
 }
 
 export type CalendarEventType = {
@@ -17,6 +18,7 @@ export type CalendarEventTypeMap = {
 export type CalendarTask = {
     label: string
     completed: boolean
+    date: string
 }
 
 export type CalendarTaskMap = {

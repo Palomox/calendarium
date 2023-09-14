@@ -3,17 +3,18 @@
   <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center" :style="getInlineStyles" :textContent="props.day" @click="editDay"/>
   <popup-component class="relative left-16 bottom-8" v-if="editing" @close_edit="editDay">Hellloooooadkjsfgisfdjgn</popup-component>
   <div class="flex flex-col overflow-y-scroll relative p-2 gap-2">
-    <entry-component :key="calendarEvent.label" v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
+    <event-component :key="calendarEvent.label" v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
   </div>
 </div>
 </template>
 <script setup lang="ts">
-  import EntryComponent from "@/components/EntryComponent.vue";
+  import EntryComponent from "@/components/EventComponent.vue";
   import EditDayComponent from "@/components/PopupComponent.vue";
   import {computed, onBeforeMount, ref, watch} from "vue";
   import {useEventStore} from "@/stores/eventstore";
   import type {CalendarEvent, CalendarPeriod, CalendarTask} from "@/libs/types";
   import PopupComponent from "@/components/PopupComponent.vue";
+  import EventComponent from "@/components/EventComponent.vue";
 
   const props = defineProps<{
     year: number
@@ -34,7 +35,12 @@
   })
   watch(useEventStore().periods, () => {
     let periods : CalendarPeriod[] = [];
-    let date = new Date(props.year, props.month-1, props.day).getTime()/1000
+    let dateObject = new Date()
+    dateObject.setUTCFullYear(props.year, props.month-1, props.day);
+    dateObject.setUTCHours(0, 0, 0, 0)
+
+    let date = dateObject.getTime()/1000
+
     for (let period of useEventStore().periods.periods) {
       if(period.startdate <= date && date <= period.enddate){
         // Included
@@ -45,6 +51,7 @@
     periodsForToday.value = periods.sort((one, two) => {
       return two.priority-one.priority
     })
+
   })
   watch(useEventStore().tasks, () => {
     let tasks = useEventStore().tasks.tasks[dayString];

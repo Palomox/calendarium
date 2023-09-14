@@ -8,14 +8,16 @@
          <font-awesome-icon icon="fa-regular fa-circle-xmark" class="text-2xl hover:text-red-700"
                             @click="closeDetails"/>
         </span>
-        <button @click="toggleEditing" class="ml-auto">Edit</button>
+        <button @click="toggleEditing" class="hover:underline ml-auto" v-text="editing ? 'Guardar' : 'Editar'"/>
       </div>
       <div class="relative flex flex-col items-start">
-        <h1 class="font-bold text-xl text-left mb-1" v-text="eventsForToday.length == 0? 'No hay eventos.' : 'Eventos:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" v-text="eventsForToday.length == 0? '' : 'Eventos:'"/>
+        <event-component :editing="editing" :key="event.label" v-for="event of eventsForToday" :entry="event"/>
+        <h1 class="font-bold text-xl text-left mb-1" v-text="tasksForToday.length == 0? '' : 'Tareas:'"/>
         <div v-if="editing">
 
         </div>
-        <entry-component v-else :key="event.label" v-for="event of eventsForToday" :entry="event"/>
+        <task-component v-else :task="task" :key="task.label" v-for="task of tasksForToday" />
         <h1 class="font-bold text-xl" v-if="periodsForToday.length!=0">Periodos:</h1>
         <period-component v-for="period of periodsForToday" :period="period"/>
       </div>
@@ -30,10 +32,12 @@ import EditDayComponent from "@/components/PopupComponent.vue";
 import {useEventStore} from "@/stores/eventstore";
 import type {CalendarEvent, CalendarEventType, CalendarPeriod, CalendarTask} from "@/libs/types";
 import PopupComponent from "@/components/PopupComponent.vue";
-import EntryComponent from "@/components/EntryComponent.vue";
+import EntryComponent from "@/components/EventComponent.vue";
 import PeriodComponent from "@/components/PeriodComponent.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {storeToRefs} from "pinia";
+import TaskComponent from "@/components/TaskComponent.vue";
+import EventComponent from "@/components/EventComponent.vue";
 
 const props = defineProps<{
   year: number
@@ -63,7 +67,12 @@ watch(useEventStore().events, () => {
 })
 watch(useEventStore().periods, () => {
   let periods : CalendarPeriod[] = [];
-  let date = new Date(props.year, props.month-1, props.day).getTime()/1000
+  let dateObject = new Date()
+  dateObject.setUTCFullYear(props.year, props.month-1, props.day);
+  dateObject.setUTCHours(0, 0, 0, 0)
+
+  let date = dateObject.getTime()/1000
+
   for (let period of useEventStore().periods.periods) {
     if(period.startdate <= date && date <= period.enddate){
       // Included
@@ -77,7 +86,7 @@ watch(useEventStore().periods, () => {
 })
 watch(useEventStore().tasks, () => {
   let tasks = useEventStore().tasks.tasks[dayString];
-  tasksForToday.value = tasks;
+  tasksForToday.value = tasks == undefined ? [] : tasks;
 })
 
 

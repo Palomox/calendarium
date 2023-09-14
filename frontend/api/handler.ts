@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
+import {createProxyMiddleware} from "http-proxy-middleware";
 
 
 const proxy = createProxyMiddleware({
@@ -16,6 +16,7 @@ const proxy = createProxyMiddleware({
             const regex = /Domain=.*.oryapis.com/gi
 
             for(let cookie of cookiesSet){
+                // @ts-ignore
                 newCookies[newCookies.length] = cookie.replaceAll(regex, "Domain=calendarium.vercel.app")
             }
             proxyRes.headers["set-cookie"] = newCookies
@@ -32,5 +33,6 @@ export default function handler(
     request: VercelRequest,
     response: VercelResponse,
 ) {
+    // @ts-ignore
     proxy(request, response)
 }

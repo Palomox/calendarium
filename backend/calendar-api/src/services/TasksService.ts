@@ -9,21 +9,21 @@ export async function getTasks(request: RequestWithMiddleware, env: Env) { // Ac
 	let startDateString = request.query.startDate
 	let endDateString = request.query.endDate
 
-	let query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed)) as task FROM tasks WHERE user_id=$1 GROUP BY date"
+	let query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed, 'date', date)) as task FROM tasks WHERE user_id=$1 GROUP BY date"
 
 	let values = [request.session.identity.id]
 
 
 	if(startDateString != undefined && !Array.isArray(startDateString)){
-		query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed)) as task FROM tasks WHERE user_id=$1 AND date>$2 GROUP BY date"
+		query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed, 'date', date)) as task FROM tasks WHERE user_id=$1 AND date>$2 GROUP BY date"
 		values = [request.session.identity.id, getDateFromString(startDateString).toUTCString()]
 		if(endDateString != undefined && !Array.isArray(endDateString) ){
-			query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed)) as task FROM tasks WHERE user_id=$1 AND date BETWEEN $2 AND $3 GROUP BY date"
+			query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed, 'date', date)) as task FROM tasks WHERE user_id=$1 AND date BETWEEN $2 AND $3 GROUP BY date"
 			values = [request.session.identity.id, getDateFromString(startDateString).toUTCString(), getDateFromString(endDateString).toUTCString()]
 		}
 
 	}else if(endDateString != undefined && !Array.isArray(endDateString) ){
-		query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed)) as task FROM tasks WHERE user_id=$1 AND date<$2 GROUP BY date"
+		query = "SELECT date, array_agg(json_build_object('label', label, 'completed', completed, 'date', date)) as task FROM tasks WHERE user_id=$1 AND date<$2 GROUP BY date"
 		values = [request.session.identity.id, getDateFromString(endDateString).toUTCString()]
 	}
 
@@ -92,8 +92,16 @@ export async function deleteTask(request : RequestWithMiddleware, env: Env) {
 
 
 export async function editTask(request : RequestWithMiddleware, env: Env) {
-	let label = request.content.label
-	let date = getDateFromString(request.content.date)
+	let labelString = request.query.label
+	let dateString = request.query.date
+
+	if(labelString == undefined || dateString == undefined || Array.isArray(labelString) || Array.isArray(dateString)) {
+		return error(400, {error: "Not enough data"})
+	}
+
+
+	let label = labelString
+	let date = getDateFromString(dateString)
 	let completed = request.content.completed
 	let user_id = request.session.identity.id
 
@@ -106,7 +114,7 @@ export async function editTask(request : RequestWithMiddleware, env: Env) {
 		})
 
 		if(response.rowCount==0){
-			return error(401, "Specified task does not exist")
+			return error(400, "Specified task does not exist")
 		}
 		return {status: 200, completed: completed}
 	} catch (e){

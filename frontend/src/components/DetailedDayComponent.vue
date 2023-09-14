@@ -1,9 +1,9 @@
 <template>
 <div class="w-32 h-32 xl:w-48 xl:h-48 border border-gray-700 xl:border-2 rounded-md m-0.5 xl:m-2 flex flex-col items-center">
-  <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center" :style="getInlineStyles" :textContent="props.day" @click="editDay"/>
-  <popup-component class="relative left-16 bottom-8" v-if="editing" @close_edit="editDay">Hellloooooadkjsfgisfdjgn</popup-component>
+  <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center" :style="getInlineStyles" :textContent="props.day" @click="openPopup"/>
+  <popup-component class="relative left-16 bottom-8" v-if="open" @close_edit="openPopup">Hellloooooadkjsfgisfdjgn</popup-component>
   <div class="flex flex-col overflow-y-scroll relative p-2 gap-2">
-    <event-component :key="calendarEvent.label" v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
+    <event-component :editing="editing" :key="calendarEvent.label" v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
   </div>
 </div>
 </template>
@@ -22,6 +22,7 @@
     day: number
   }>()
 
+  let open = ref(false)
   let editing = ref(false)
   let eventsForToday = ref<CalendarEvent[]>([])
   let periodsForToday = ref<CalendarPeriod[]>([])
@@ -75,7 +76,7 @@
   })
 
 
-  function editDay(){
+  function openPopup(){
     editing.value = !editing.value;
   }
 

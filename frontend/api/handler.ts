@@ -9,17 +9,17 @@ const proxy = createProxyMiddleware({
     pathRewrite: {
         "^/.ory": "" // strip .ory from the url
     },
+    hostRewrite: true,
+    cookieDomainRewrite: {
+      "romantic-satoshi-kojdtfzsl2.projects.oryapis.com": "calendarium.vercel.app",
+      ".oryapis.com": "calendarium.vercel.app"
+    },
     onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
         const response = responseBuffer.toString('utf8');
 
-        // The cookie
-        const cookieRegex = /Domain=.*.oryapis.com/gi
-
         console.log(response)
 
-        let newResponse = response.replaceAll(cookieRegex, "Domain=calendarium.vercel.app")
-
-        newResponse = newResponse.replaceAll("/ui/", "/.ory/ui/")
+        let newResponse = response.replaceAll("/ui/", "/.ory/ui/")
 
         newResponse = newResponse.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app/.ory")
         return newResponse;

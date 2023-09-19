@@ -19,10 +19,11 @@ const proxy = createProxyMiddleware({
 
         console.log(response)
 
-        let newResponse = response.replaceAll("/ui/", "/.ory/ui/")
+        let location = proxyRes.headers["location"]
 
-        newResponse = newResponse.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app/.ory")
-        return newResponse;
+        proxyRes.headers["location"] = location.replaceAll("/ui/", "/.ory/ui/")
+
+        return response.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app/.ory")
     }),
     /*onProxyRes(proxyRes) {
         let cookiesSet = proxyRes.headers["set-cookie"]

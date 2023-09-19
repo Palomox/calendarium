@@ -11,12 +11,12 @@
         <button @click="toggleEditing" class="hover:underline ml-auto" v-text="editing ? 'Guardar' : 'Editar'"/>
       </div>
       <div class="relative flex flex-col items-start">
-        <h1 class="font-bold text-xl text-left mb-1" v-text="eventsForToday.length == 0 && !editing? '' : 'Eventos:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" :hidden="!editing" v-text="eventsForToday.length == 0 && !editing? '' : 'Eventos:'"/>
         <event-component :editing="editing" :key="event.label" v-for="event of eventsForToday" :entry="event"/>
         <button v-if="editing" @click="newEvent()" class="regular-button w-6 h-6 m-auto">
           <font-awesome-icon icon="fa-solid fa-plus" />
         </button>
-        <h1 class="font-bold text-xl text-left mb-1" v-text="tasksForToday.length == 0 && !editing? '' : 'Tareas:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" :hidden="!editing" v-text="tasksForToday.length == 0 && !editing? '' : 'Tareas:'"/>
         <task-component :editing="editing" :task="task" :key="task.label" v-for="task of tasksForToday" />
         <button v-if="editing" @click="newTask()" class="regular-button w-6 h-6 m-auto">
           <font-awesome-icon icon="fa-solid fa-plus" />
@@ -30,15 +30,12 @@
 </template>
 <script setup lang="ts">
 
-import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
-import EditDayComponent from "@/components/PopupComponent.vue";
+import {computed, ref, watch} from "vue";
 import {useEventStore} from "@/stores/eventstore";
-import type {CalendarEvent, CalendarEventType, CalendarPeriod, CalendarTask} from "@/libs/types";
+import type {CalendarEvent, CalendarPeriod, CalendarTask} from "@/libs/types";
 import PopupComponent from "@/components/PopupComponent.vue";
-import EntryComponent from "@/components/EventComponent.vue";
 import PeriodComponent from "@/components/PeriodComponent.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {storeToRefs} from "pinia";
 import TaskComponent from "@/components/TaskComponent.vue";
 import EventComponent from "@/components/EventComponent.vue";
 import {useViewStore, newEvent as newEventStore, newTask as newTaskStore} from "@/stores/viewstore";

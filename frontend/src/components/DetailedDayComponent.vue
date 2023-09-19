@@ -4,8 +4,18 @@
   <popup-component class="relative left-16 bottom-8 z-50" v-if="open" @close_edit="openPopup">
     <button :class="editing ? 'save-button' : 'regular-button'" class="p-1" @click="editing = !editing" v-text="editing? 'Guardar' : 'Editar'" />
   </popup-component>
-  <div class="flex flex-col overflow-y-scroll relative p-2 gap-2">
+  <div class="flex flex-col overflow-y-scroll relative p-2 gap-2 w-full">
+    <h1 class="font-bold text-xl text-left mb-1" :hidden="!editing" v-text="editing? 'Eventos:' : ''"/>
     <event-component :editing="editing" :key="calendarEvent.label" v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
+    <button v-if="editing" @click="newEvent()" class="regular-button w-6 h-6 m-auto">
+      <font-awesome-icon icon="fa-solid fa-plus" />
+    </button>
+    <h1 class="font-bold text-xl text-left mb-1" :hidden="!editing" v-text="editing? 'Tareas:' : ''"/>
+    <task-component :editing="editing" :task="task" :key="task.label" v-for="task of tasksForToday" />
+    <button v-if="editing" @click="newTask()" class="regular-button w-6 h-6 m-auto">
+      <font-awesome-icon icon="fa-solid fa-plus" />
+    </button>
+
   </div>
 </div>
 </template>
@@ -17,12 +27,17 @@
   import type {CalendarEvent, CalendarPeriod, CalendarTask} from "@/libs/types";
   import PopupComponent from "@/components/PopupComponent.vue";
   import EventComponent from "@/components/EventComponent.vue";
+  import TaskComponent from "@/components/TaskComponent.vue";
+  import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+  import {newEvent as newEventStore, newTask as newTaskStore, useViewStore} from "@/stores/viewstore";
 
   const props = defineProps<{
     year: number
     month: number
     day: number
   }>()
+
+  const viewStore = useViewStore()
 
   let open = ref(false)
   let editing = ref(false)
@@ -31,6 +46,27 @@
   let tasksForToday = ref<CalendarTask[]>([])
 
   let dayString = props.day+"-"+props.month+"-"+props.year;
+
+  function newEvent(){
+    viewStore.editingPopup = "event";
+
+    let editingEvent = Object.assign({}, newEventStore)
+
+    editingEvent.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
+
+    viewStore.editingEvent = editingEvent;
+  }
+
+  function newTask(){
+    viewStore.editingPopup = "task";
+
+    let editingTask = Object.assign({}, newTaskStore)
+
+    editingTask.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
+
+    viewStore.editingTask = editingTask
+  }
+
 
   watch(useEventStore().events, () => {
     let events = useEventStore().events.events[dayString];

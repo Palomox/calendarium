@@ -1,4 +1,4 @@
-import {createEvent, deleteEvent, getEvents} from "./services/EventsService";
+import {alterEvent, deleteEvent, getEvents} from "./services/EventsService";
 
 import {createCors, error, json, RequestLike, Router, withContent} from "itty-router";
 import authenticate from "./middleware/ory";
@@ -32,7 +32,7 @@ router
 		Events API
 	 */
 	.get("/api/v1/events", getEvents)
-	.post("/api/v1/events", createEvent)
+	.post("/api/v1/events", alterEvent)
 	.delete("/api/v1/events", deleteEvent)
 	/*
 		Event Types API

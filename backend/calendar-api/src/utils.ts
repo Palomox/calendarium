@@ -17,7 +17,6 @@ export async function getPostgresClient(env: Env){
  */
 export function getDateFromString(dateString: string){
 	let splitDate = dateString.split("-")
-	// Use UTC date??
 	let date = new Date()
 	date.setUTCFullYear(<number>(<unknown>splitDate[2]), (<number>(<unknown>splitDate[1]))-1, <number>(<unknown>splitDate[0]))
 	date.setUTCHours(0, 0, 0, 0)

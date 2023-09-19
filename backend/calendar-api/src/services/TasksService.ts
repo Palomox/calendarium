@@ -66,8 +66,15 @@ export async function createTask(request : RequestWithMiddleware, env: Env) {
 
 
 export async function deleteTask(request : RequestWithMiddleware, env: Env) {
-	let label = request.content.label
-	let date = getDateFromString(request.content.date)
+	let labelString = request.query.label
+	let dateString = request.query.date
+
+	if(labelString == undefined || dateString == undefined || Array.isArray(labelString) || Array.isArray(dateString)) {
+		return error(400, {error: "Not enough data"})
+	}
+
+	let label = labelString
+	let date = getDateFromString(dateString)
 	let user_id = request.session.identity.id
 
 	const client = await getPostgresClient(env)

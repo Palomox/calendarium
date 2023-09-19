@@ -38,24 +38,42 @@ export async function getEvents(request: RequestWithMiddleware, env: Env) {
 	return Object.fromEntries(map);
 }
 
-export async function createEvent(request : RequestWithMiddleware, env: Env) {
+export async function alterEvent(request : RequestWithMiddleware, env: Env) {
+	let labelQuery = request.query.label;
+	let dateQueryString = request.query.date;
+
+
+
 
 	let label = request.content.label
 	let type = request.content.type
 	let date = getDateFromString(request.content.date)
 	let user_id = request.session.identity.id
 
+	let query : string;
+	let values : string[];
+
+	if( labelQuery != undefined && dateQueryString != undefined && !Array.isArray(labelQuery) && !Array.isArray(dateQueryString) ){
+
+		query = "UPDATE events SET date=$1, label=$2, type=$3 WHERE date=$4 AND label=$5 AND user_id=$6";
+		values = [date, label, type, getDateFromString(dateQueryString), labelQuery, user_id]
+	} else {
+		query = "INSERT INTO events(date, user_id, label, type) VALUES ($1, $2, $3, $4)";
+		values = [date, user_id, label, type]
+	}
+
+
 	const client = await getPostgresClient(env)
 
 	try {
 		await client.query({
-			text: "INSERT INTO events(date, user_id, label, type) VALUES ($1, $2, $3, $4)",
-			values: [date, user_id, label, type]
+			text: query,
+			values: values
 		})
 		return {status: 200}
 	} catch (e){
 		// @ts-ignore
-		return error(409, e.detail)
+		return error(409, e)
 	}
 
 }

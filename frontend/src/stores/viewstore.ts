@@ -12,7 +12,8 @@ export const newEvent : CalendarEvent= {
 export const newTask :CalendarTask = {
     date: new Date().toISOString().substring(0, 10),
     label: "Nueva tarea",
-    completed: false
+    completed: false,
+    new: true
 }
 
 export const useViewStore = defineStore('view', () => {

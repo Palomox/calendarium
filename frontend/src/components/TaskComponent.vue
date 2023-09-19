@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-row gap-1">
   <input @change="changeTask()" :checked="completed" type="checkbox">
-  <span class="hover:cursor-default" :textContent="props.task.label"/>
+  <span @click="openTaskEditor()" class="hover:cursor-default" :textContent="props.task.label"/>
   <button @click="deleteTask()" v-if="editing" class="bg-red-500 rounded-md w-6 h-6">-</button>
 </div>
 </template>
@@ -11,6 +11,7 @@ import {ref} from "vue";
 import axios from "axios";
 import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
+import {useViewStore} from "@/stores/viewstore";
 
 const props = defineProps<{
   task: CalendarTask
@@ -19,7 +20,17 @@ const props = defineProps<{
 
 let completed = ref(props.task.completed)
 
+const viewStore = useViewStore()
 const toast = useToast()
+
+function openTaskEditor(){
+  if(!props.editing){
+    return
+  }
+
+  viewStore.editingPopup = "task"
+  viewStore.editingTask = props.task
+}
 
 function deleteTask(){
   let splitDate = props.task.date.split("-")

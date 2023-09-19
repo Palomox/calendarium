@@ -20,6 +20,7 @@ export type CalendarTask = {
     label: string
     completed: boolean
     date: string
+    new?: boolean
 }
 
 export type CalendarTaskMap = {

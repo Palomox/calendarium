@@ -44,7 +44,7 @@
       withCredentials: true,
       params: {
         label: props.event.new != undefined ? undefined : props.event.label,
-        date: props.event.new != undefined ? undefined : splitOldDate[2]+"-"+splitDate[1]+"-"+splitDate[0]
+        date: props.event.new != undefined ? undefined : splitOldDate[2]+"-"+splitOldDate[1]+"-"+splitOldDate[0]
       }
     }).then(response => {
       useEventStore().fetchEventsFromApiWithStoredInterval()

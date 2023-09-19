@@ -16,8 +16,11 @@
         <button v-if="editing" @click="newEvent()" class="regular-button w-6 h-6 m-auto">
           <font-awesome-icon icon="fa-solid fa-plus" />
         </button>
-        <h1 class="font-bold text-xl text-left mb-1" v-text="tasksForToday.length == 0? '' : 'Tareas:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" v-text="tasksForToday.length == 0 && !editing? '' : 'Tareas:'"/>
         <task-component :editing="editing" :task="task" :key="task.label" v-for="task of tasksForToday" />
+        <button v-if="editing" @click="newTask()" class="regular-button w-6 h-6 m-auto">
+          <font-awesome-icon icon="fa-solid fa-plus" />
+        </button>
         <h1 class="font-bold text-xl" v-if="periodsForToday.length!=0">Periodos:</h1>
         <period-component v-for="period of periodsForToday" :period="period"/>
       </div>
@@ -38,7 +41,8 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {storeToRefs} from "pinia";
 import TaskComponent from "@/components/TaskComponent.vue";
 import EventComponent from "@/components/EventComponent.vue";
-import {useViewStore, newEvent as newEventStore, newTask} from "@/stores/viewstore";
+import {useViewStore, newEvent as newEventStore, newTask as newTaskStore} from "@/stores/viewstore";
+import {StringUtils} from "@/libs/stringutils";
 
 const props = defineProps<{
   year: number
@@ -74,6 +78,16 @@ function newEvent(){
   editingEvent.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
 
   viewStore.editingEvent = editingEvent;
+}
+
+function newTask(){
+  viewStore.editingPopup = "task";
+
+  let editingTask = Object.assign({}, newTaskStore)
+
+  editingTask.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
+
+  viewStore.editingTask = editingTask
 }
 
 watch(eventStore.events, () => {
@@ -112,7 +126,19 @@ const getInlineStyles = computed(() => {
 
   let colorHex;
   if (eventsForToday.value.length == 0) {
-    colorHex = "#ffffff"
+    if(periodsForToday.value.length == 0){
+      colorHex = "#ffffff"
+    } else {
+      let color = periodsForToday.value[0].color
+
+      let triplet = StringUtils.hexToRgb(color)
+
+      if(triplet == null){
+        colorHex = "#ffffff"
+      } else {
+        colorHex = (triplet.r * 0.299 + triplet.g * 0.587 + triplet.b * 0.114) > 186 ? '#000000' : '#ffffff'
+      }
+    }
   } else {
     colorHex = eventStore.eventTypes.event_types[eventsForToday.value[0].type].color
   }

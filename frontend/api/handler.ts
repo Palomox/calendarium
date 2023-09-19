@@ -15,11 +15,11 @@ const proxy = createProxyMiddleware({
         // The cookie
         const cookieRegex = /Domain=.*.oryapis.com/gi
 
+        console.log(response)
+
         let newResponse = response.replaceAll(cookieRegex, "Domain=calendarium.vercel.app")
 
-        const locationRegex = /\/ui\//gi
-
-        newResponse = newResponse.replaceAll(locationRegex, "/.ory/ui")
+        newResponse = newResponse.replaceAll("/ui/", "/.ory/ui/")
 
         newResponse = newResponse.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app/.ory")
         return newResponse;

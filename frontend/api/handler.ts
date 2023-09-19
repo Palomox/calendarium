@@ -21,7 +21,7 @@ const proxy = createProxyMiddleware({
 
         let location = proxyRes.headers["location"]
 
-        proxyRes.headers["location"] = location.replaceAll("/ui/", "/.ory/ui/")
+        proxyRes.headers["location"] = location.replace("/ui/", "/.ory/ui/")
 
         return response.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://calendarium.vercel.app/.ory")
     }),

@@ -2,7 +2,7 @@
   <div class="h-8 w-8 m-0.5 rounded-md col-span-1 text-center">
     <button @click.left="openDetails" class="h-8 w-8 cursor-default border border-zinc-700 rounded-md"
             :style="getInlineStyles" v-text="props.day"/>
-    <popup-component class="left-10 bottom-8 w-36" v-if="detailsOpen">
+    <popup-component class="left-10 bottom-8 min-w-max" v-if="detailsOpen">
       <div class="flex flex-row">
         <span>
          <font-awesome-icon icon="fa-regular fa-circle-xmark" class="text-2xl hover:text-red-700"
@@ -11,13 +11,13 @@
         <button @click="toggleEditing" class="hover:underline ml-auto" v-text="editing ? 'Guardar' : 'Editar'"/>
       </div>
       <div class="relative flex flex-col items-start">
-        <h1 class="font-bold text-xl text-left mb-1" v-text="eventsForToday.length == 0? '' : 'Eventos:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" v-text="eventsForToday.length == 0 && !editing? '' : 'Eventos:'"/>
         <event-component :editing="editing" :key="event.label" v-for="event of eventsForToday" :entry="event"/>
+        <button v-if="editing" @click="newEvent()" class="regular-button w-6 h-6 m-auto">
+          <font-awesome-icon icon="fa-solid fa-plus" />
+        </button>
         <h1 class="font-bold text-xl text-left mb-1" v-text="tasksForToday.length == 0? '' : 'Tareas:'"/>
-        <div v-if="editing">
-
-        </div>
-        <task-component v-else :task="task" :key="task.label" v-for="task of tasksForToday" />
+        <task-component :editing="editing" :task="task" :key="task.label" v-for="task of tasksForToday" />
         <h1 class="font-bold text-xl" v-if="periodsForToday.length!=0">Periodos:</h1>
         <period-component v-for="period of periodsForToday" :period="period"/>
       </div>
@@ -38,12 +38,17 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {storeToRefs} from "pinia";
 import TaskComponent from "@/components/TaskComponent.vue";
 import EventComponent from "@/components/EventComponent.vue";
+import {useViewStore, newEvent as newEventStore, newTask} from "@/stores/viewstore";
 
 const props = defineProps<{
   year: number
   month: number
   day: number
 }>();
+
+const viewStore = useViewStore();
+
+const eventStore = useEventStore();
 
 let detailsOpen = ref(false)
 
@@ -61,11 +66,21 @@ function toggleEditing() {
   editing.value = !editing.value;
 }
 
-watch(useEventStore().events, () => {
+function newEvent(){
+  viewStore.editingPopup = "event";
+
+  let editingEvent = Object.assign({}, newEventStore)
+
+  editingEvent.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
+
+  viewStore.editingEvent = editingEvent;
+}
+
+watch(eventStore.events, () => {
   let events = useEventStore().events.events[dayString];
   eventsForToday.value = events == undefined ? [] : events;
 })
-watch(useEventStore().periods, () => {
+watch(eventStore.periods, () => {
   let periods : CalendarPeriod[] = [];
   let dateObject = new Date()
   dateObject.setUTCFullYear(props.year, props.month-1, props.day);
@@ -73,7 +88,7 @@ watch(useEventStore().periods, () => {
 
   let date = dateObject.getTime()/1000
 
-  for (let period of useEventStore().periods.periods) {
+  for (let period of eventStore.periods.periods) {
     if(period.startdate <= date && date <= period.enddate){
       // Included
       periods[periods.length] = period
@@ -84,8 +99,8 @@ watch(useEventStore().periods, () => {
     return two.priority-one.priority
   })
 })
-watch(useEventStore().tasks, () => {
-  let tasks = useEventStore().tasks.tasks[dayString];
+watch(eventStore.tasks, () => {
+  let tasks = eventStore.tasks.tasks[dayString];
   tasksForToday.value = tasks == undefined ? [] : tasks;
 })
 
@@ -99,7 +114,7 @@ const getInlineStyles = computed(() => {
   if (eventsForToday.value.length == 0) {
     colorHex = "#ffffff"
   } else {
-    colorHex = useEventStore().eventTypes.event_types[eventsForToday.value[0].type].color
+    colorHex = eventStore.eventTypes.event_types[eventsForToday.value[0].type].color
   }
   let textColor = 'color: ' + colorHex + ';'
 

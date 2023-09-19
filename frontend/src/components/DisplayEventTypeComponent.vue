@@ -25,10 +25,12 @@
       </div>
 
     </div>
-    <button v-if="!editing" @click="editing = true" class="ml-8 bg-indigo-400 p-2 rounded-md text-black h-min">Editar</button>
-    <button v-if="editing" @click="saveType()" class="ml-8 bg-emerald-600 p-2 rounded-md text-black h-min">Guardar</button>
+    <button v-if="!editing" @click="editing = true" class="ml-8 p-2 h-min regular-button">Editar</button>
+    <button v-if="editing" @click="saveType()" class="ml-8 p-2 h-min save-button">Guardar</button>
 
-    <button v-if="editing" @click="deleteType()" class="w-16 h-16 bg-red-600 ml-auto p-2 rounded-md text-5xl font-bold">x</button>
+    <button v-if="editing" @click="deleteType()" class="w-16 h-16 ml-auto p-2 text-5xl close-button">
+      <font-awesome-icon icon="fa-solid fa-xmark" />
+    </button>
   </div>
 </template>
 <script setup lang="ts">
@@ -38,6 +40,7 @@ import axios from "axios";
 import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
 import {onBeforeMount, ref} from "vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 
 const props = defineProps<{
@@ -79,7 +82,7 @@ function saveType() {
 }
 function deleteType(){
   if(isNew.value){
-    delete useEventStore().eventTypes.event_types[eventType.value.name]
+    delete useEventStore().eventTypes.event_types[props.eventType.name]
     return
   }
 

@@ -2,6 +2,7 @@ export type CalendarEvent = {
     type: string
     label: string
     date: string
+    new?:boolean
 }
 
 export type CalendarEventType = {

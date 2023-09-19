@@ -14,6 +14,8 @@ const props = defineProps<{
   month: number
 }>()
 
+let eventStore = useEventStore()
+
 let width = ref(window.matchMedia('(min-width: 57rem)').matches)
 
 function onResize() {
@@ -31,7 +33,10 @@ onBeforeMount(() => {
   addEventListener("resize", onResize)
 })
 
-useEventStore().fetchAllFromApi("1-"+props.month+"-"+props.year, "31-"+props.month+"-"+props.year)
+eventStore.interval.startDate = "1-"+props.month+"-"+props.year
+eventStore.interval.endDate = "31-"+props.month+"-"+props.year
+
+useEventStore().fetchAllFromApiWithStoredInterval()
 
 
 onBeforeUnmount(()=> {

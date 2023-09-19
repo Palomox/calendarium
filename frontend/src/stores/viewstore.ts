@@ -1,5 +1,19 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
+import type {CalendarEvent, CalendarTask} from "@/libs/types";
+
+export const newEvent : CalendarEvent= {
+    type: "global",
+    label: "Nuevo evento",
+    date: new Date().toISOString().substring(0, 10),
+    new: true
+}
+
+export const newTask :CalendarTask = {
+    date: new Date().toISOString().substring(0, 10),
+    label: "Nueva tarea",
+    completed: false
+}
 
 export const useViewStore = defineStore('view', () => {
     const mode = ref('year');
@@ -8,7 +22,17 @@ export const useViewStore = defineStore('view', () => {
         year: 2023,
         month: 1
     });
-    const week = ref('2023-06-06')
+    const week = ref({
+        year: 2023,
+        week: 3
+    })
+
+    const editingPopup = ref<'none' | 'event' | 'task'>("none");
+
+    const editingEvent = ref<CalendarEvent>(Object.assign({}, newEvent))
+
+    const editingTask = ref<CalendarTask>(Object.assign({}, newTask))
+
     function setMode(modeSetting : 'year' | 'month' | 'week' ){
         mode.value = modeSetting;
     }
@@ -28,8 +52,8 @@ export const useViewStore = defineStore('view', () => {
     function setMonthYear(newYear: number){
         month.value.year = newYear;
     }
-    function setWeek(newWeek : string) {
+    function setWeek(newWeek : {year: number, week: number}) {
         week.value = newWeek;
     }
-    return {mode, setMode, yearInterval, month, week, setYearInterval, setFullMonth, setMonthMonth, setMonthYear, setWeek};
+    return {mode, setMode, yearInterval, month, week, editingPopup, editingEvent, editingTask, setYearInterval, setFullMonth, setMonthMonth, setMonthYear, setWeek};
 });

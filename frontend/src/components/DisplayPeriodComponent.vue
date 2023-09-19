@@ -33,10 +33,12 @@
 
 
     </div>
-    <button v-if="!editing" @click="editing = true" class="ml-8 bg-indigo-400 p-2 rounded-md text-black h-min">Editar</button>
-    <button v-if="editing" @click="saveType()" class="ml-8 bg-emerald-600 p-2 rounded-md text-black h-min">Guardar</button>
+    <button v-if="!editing" @click="editing = true" class="ml-8 p-2 h-min regular-button">Editar</button>
+    <button v-if="editing" @click="savePeriod()" class="ml-8 p-2 h-min save-button">Guardar</button>
 
-    <button v-if="editing" @click="deleteType()" class="w-16 h-16 bg-red-600 ml-auto p-2 rounded-md text-5xl font-bold">x</button>
+    <button v-if="editing" @click="deletePeriod()" class="w-16 h-16 ml-auto p-2 text-5xl font-bold close-button">
+      <font-awesome-icon icon="fa-solid fa-xmark" />
+    </button>
   </div>
 </template>
 <script setup lang="ts">
@@ -46,6 +48,7 @@ import axios from "axios";
 import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
 import {computed, onBeforeMount, ref} from "vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 
 const props = defineProps<{
@@ -97,7 +100,7 @@ function changeEndDate(date: any) {
   period.value.enddate = dateObject.getTime()/1000
 }
 
-function saveType() {
+function savePeriod() {
   axios.post(apiPath+"periods", {
     name: period.value.name,
     color: period.value.color,
@@ -119,9 +122,14 @@ function saveType() {
     toasts.error(error.message)
   })
 }
-function deleteType(){
+function deletePeriod(){
   if(isNew.value){
-    delete useEventStore().periods.periods[useEventStore().periods.periods.length-1]
+    let newIndex = useEventStore().periods.periods.findIndex(periodToCompare => {
+      return periodToCompare.name == props.period.name && periodToCompare.startdate == props.period.startdate && periodToCompare.enddate == props.period.enddate
+    })
+
+    useEventStore().periods.periods.splice(newIndex, newIndex)
+
     return
   }
 
@@ -134,9 +142,7 @@ function deleteType(){
     }}).then((response) => {
     toasts.success(`Periodo ${period.value.name} eliminado`)
 
-    delete useEventStore().eventTypes.event_types[useEventStore().periods.periods.findIndex(periodI => {
-      return periodI.name == props.period.name && periodI.startdate == props.period.startdate && periodI.enddate == props.period.enddate;
-    })]
+    useEventStore().fetchPeriodsFromApi()
   }).catch((error) => {
     toasts.error(error.message)
   })

@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory, routerKey} from 'vue-router'
 import HomeView from "@/views/HomeView.vue";
 import {useViewStore} from "@/stores/viewstore";
 import {logoutUrl, ory, session} from "@/auth/auth";
@@ -13,7 +13,7 @@ export function refreshPath() {
             router.push("/year/" + viewStore.month.year + "/month/" + viewStore.month.month);
             break;
         case "week":
-            router.push("/year/" + viewStore)
+            router.push("/year/" + viewStore.week.year+"/week/"+viewStore.week.week);
     }
 }
 
@@ -38,9 +38,10 @@ const router = createRouter({
             props: route => ({year: Number(route.params.year), month: Number(route.params.month)})
         },
         {
-            name: "Login",
-            path: "/login",
-            component: () => import('../views/LoginView.vue')
+            name: "Week view",
+            path: "/year/:year(\\d+)/week/:week(\\d+)",
+            component: () => import('../views/WeekView.vue'),
+            props: route => ({})
         },
         {
             name: "Edit Event Types",

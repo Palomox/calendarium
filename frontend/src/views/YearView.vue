@@ -32,7 +32,10 @@ onBeforeMount(() => {
   useViewStore().setMode('year')
   useViewStore().setYearInterval(<string>props.year)
 
-  useEventStore().fetchAllFromApi("1-"+years.months[0]+"-"+years.years[0], "31-"+years.months[years.months.length-1]+"-"+years.years[years.years.length-1])
+  useEventStore().interval.startDate = "1-"+years.months[0]+"-"+years.years[0]
+  useEventStore().interval.endDate = "31-"+years.months[years.months.length-1]+"-"+years.years[years.years.length-1]
+
+  useEventStore().fetchAllFromApiWithStoredInterval()
 
 })
 

@@ -21,6 +21,14 @@ export const useEventStore = defineStore('event', () => {
 
     const tasks = ref<{tasks: CalendarTaskMap}>({tasks: {}})
 
+    const interval = ref<{
+        startDate?: string,
+        endDate?: string
+    }>({
+        startDate: undefined,
+        endDate: undefined
+    })
+
     function getEventsForDay(day: string) : CalendarEvent[] {
         let eventsForDay = events.value.events[day]
 
@@ -38,40 +46,52 @@ export const useEventStore = defineStore('event', () => {
         return periodsForToday;
     }
 
-    function fetchEventsFromApi(intialDate?: string, finalDate?: string){
-        axios.get(apiPath+"events", {withCredentials: true, params: {
+    async function fetchEventsFromApi(intialDate?: string, finalDate?: string){
+        let response = await axios.get(apiPath+"events", {withCredentials: true, params: {
                 startDate: intialDate,
                 endDate: finalDate
-            }}).then((response) => {
-            events.value.events = <CalendarEventMap>response.data
-        });
-    }
-    function fetchEventTypesFromApi(){
-        axios.get(apiPath+"events/types", {withCredentials: true}).then((response) => {
-            eventTypes.value.event_types = <CalendarEventTypeMap>response.data
-        });
-    }
-    function fetchPeriodsFromApi(){
-        axios.get(apiPath+"periods", {withCredentials: true}).then((response) => {
-            periods.value.periods = <CalendarPeriod[]>response.data.periods
-        });
-    }
-    function fetchTasksFromApi(intialDate?: string, finalDate?: string){
-        axios.get(apiPath+"tasks", {withCredentials: true, params: {
-                startDate: intialDate,
-                endDate: finalDate
-            }}).then((response) => {
-            tasks.value.tasks = <CalendarTaskMap>response.data
-        });
+            }})
+        events.value.events = <CalendarEventMap>response.data
     }
 
+    async function fetchEventsFromApiWithStoredInterval(){
+        await fetchEventsFromApi(interval.value.startDate, interval.value.endDate)
+    }
+
+    async function fetchEventTypesFromApi(){
+        let response = await axios.get(apiPath+"events/types", {withCredentials: true})
+
+        eventTypes.value.event_types = <CalendarEventTypeMap>response.data
+    }
+    async function fetchPeriodsFromApi(){
+        let response = await axios.get(apiPath+"periods", {withCredentials: true})
+
+        periods.value.periods = <CalendarPeriod[]>response.data.periods
+    }
+    async function fetchTasksFromApi(intialDate?: string, finalDate?: string){
+        let response = await axios.get(apiPath+"tasks", {withCredentials: true, params: {
+                startDate: intialDate,
+                endDate: finalDate
+            }})
+
+        tasks.value.tasks = <CalendarTaskMap>response.data
+    }
+
+    async function fetchTasksFromApiWithStoredInterval(){
+        await fetchTasksFromApi(interval.value.startDate, interval.value.endDate)
+    }
     function fetchAllFromApi(initialDate?: string, finalDate?: string) {
-        fetchEventsFromApi(initialDate, finalDate)
-        fetchEventTypesFromApi()
-        fetchPeriodsFromApi()
-        fetchTasksFromApi(initialDate, finalDate)
+        fetchEventTypesFromApi().then(() => {
+            fetchEventsFromApi(initialDate, finalDate)
+            fetchPeriodsFromApi()
+            fetchTasksFromApi(initialDate, finalDate)
+        })
+    }
+
+    function fetchAllFromApiWithStoredInterval(){
+        fetchAllFromApi(interval.value.startDate, interval.value.endDate)
     }
 
 
-    return {events, getEventsForDay, periods, getPeriodsForDate, eventTypes, tasks, fetchEventsFromApi, fetchPeriodsFromApi, fetchTasksFromApi, fetchEventTypesFromApi, fetchAllFromApi }
+    return {events, getEventsForDay, periods, getPeriodsForDate, eventTypes, tasks, interval, fetchEventsFromApi, fetchEventsFromApiWithStoredInterval, fetchPeriodsFromApi, fetchTasksFromApi, fetchTasksFromApiWithStoredInterval,fetchEventTypesFromApi, fetchAllFromApi, fetchAllFromApiWithStoredInterval }
 })

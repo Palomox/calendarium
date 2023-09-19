@@ -30,6 +30,7 @@
   import TaskComponent from "@/components/TaskComponent.vue";
   import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
   import {newEvent as newEventStore, newTask as newTaskStore, useViewStore} from "@/stores/viewstore";
+  import {StringUtils} from "@/libs/stringutils";
 
   const props = defineProps<{
     year: number
@@ -104,7 +105,19 @@
 
     let colorHex;
     if (eventsForToday.value.length == 0) {
-      colorHex = "#ffffff"
+      if(periodsForToday.value.length == 0){
+        colorHex = "#ffffff"
+      } else {
+        let color = periodsForToday.value[0].color
+
+        let triplet = StringUtils.hexToRgb(color)
+
+        if(triplet == null){
+          colorHex = "#ffffff"
+        } else {
+          colorHex = (triplet.r * 0.299 + triplet.g * 0.587 + triplet.b * 0.114) > 186 ? '#000000' : '#ffffff'
+        }
+      }
     } else {
       colorHex = useEventStore().eventTypes.event_types[eventsForToday.value[0].type].color
     }

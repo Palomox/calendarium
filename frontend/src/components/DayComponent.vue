@@ -11,12 +11,12 @@
         <button @click="toggleEditing" class="hover:underline ml-auto" v-text="editing ? 'Guardar' : 'Editar'"/>
       </div>
       <div class="relative flex flex-col items-start">
-        <h1 class="font-bold text-xl text-left mb-1" :hidden="!editing" v-text="eventsForToday.length == 0 && !editing? '' : 'Eventos:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" :hidden="eventsForToday.length == 0 && !editing" v-text="eventsForToday.length == 0 && !editing? '' : 'Eventos:'"/>
         <event-component :editing="editing" :key="event.label" v-for="event of eventsForToday" :entry="event"/>
         <button v-if="editing" @click="newEvent()" class="regular-button w-6 h-6 m-auto">
           <font-awesome-icon icon="fa-solid fa-plus" />
         </button>
-        <h1 class="font-bold text-xl text-left mb-1" :hidden="!editing" v-text="tasksForToday.length == 0 && !editing? '' : 'Tareas:'"/>
+        <h1 class="font-bold text-xl text-left mb-1" :hidden="eventsForToday.length == 0 && !editing" v-text="tasksForToday.length == 0 && !editing? '' : 'Tareas:'"/>
         <task-component :editing="editing" :task="task" :key="task.label" v-for="task of tasksForToday" />
         <button v-if="editing" @click="newTask()" class="regular-button w-6 h-6 m-auto">
           <font-awesome-icon icon="fa-solid fa-plus" />

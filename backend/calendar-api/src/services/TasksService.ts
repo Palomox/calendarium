@@ -109,21 +109,52 @@ export async function editTask(request : RequestWithMiddleware, env: Env) {
 
 	let label = labelString
 	let date = getDateFromString(dateString)
-	let completed = request.content.completed
 	let user_id = request.session.identity.id
+
+	let newLabel = request.content.label
+	let newDate = request.content.date
+	let completed = request.content.completed
+
+	let baseQuery = "UPDATE tasks SET "
+	let conditions = " WHERE date=$1 AND user_id=$2 AND label=$3"
+
+	let setting = ""
+
+	let values = [date, user_id, label]
+
+	if(newLabel != undefined){
+		setting+="label=$"+(values.length+1)+","
+		values[values.length] = newLabel;
+	}
+	if(newDate != undefined){
+		setting+="date=$"+(values.length+1)+","
+		values[values.length] = getDateFromString(newDate)
+	}
+	if(completed != undefined){
+		setting+="completed=$"+(values.length+1)+","
+		values[values.length] = completed
+	}
 
 	const client = await getPostgresClient(env)
 
+	if (setting.length == 0){
+		return error(400, "No parameters are being modified")
+	}
+
+	setting = setting.substring(0, setting.length-1)
+
+	console.log(baseQuery+setting+conditions)
+
 	try {
 		let response = await client.query({
-			text: "UPDATE tasks SET completed=$4 WHERE date=$1 AND user_id=$2 AND label=$3",
-			values: [date, user_id, label, completed]
+			text: baseQuery+setting+conditions,
+			values: values
 		})
 
 		if(response.rowCount==0){
 			return error(400, "Specified task does not exist")
 		}
-		return {status: 200, completed: completed}
+		return {status: 200}
 	} catch (e){
 		// @ts-ignore
 		return error(409, e)

@@ -5,6 +5,7 @@ import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware"
 const proxy = createProxyMiddleware({
     target: "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com",
     changeOrigin: true,
+    selfHandleResponse: true,
     pathRewrite: {
         "^/.ory": "" // strip .ory from the url
     },

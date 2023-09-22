@@ -28,7 +28,7 @@ const proxy = createProxyMiddleware({
             res.setHeader("location", (location.replace(ui, "/.ory/ui/")))
         }
         // @ts-ignore
-        return response.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", localDomain)
+        return response.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://"+localDomain)
     }),
 })
 export default function handler(

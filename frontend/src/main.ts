@@ -12,7 +12,7 @@ import type {PluginOptions} from "vue-toastification/dist/types/types";
 import VueToastificationPlugin, {POSITION} from "vue-toastification";
 import {faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
 
-
+const vercelEnv = import.meta.env.VITE_VERCEL_ENV
 const app = createApp(App)
 const pinia = createPinia();
 
@@ -34,8 +34,7 @@ router.beforeEach(async (to, from) => {
                 logoutUrl.value = data.logout_url.replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/", "https://"+window.location.origin+"/.ory/")
             })
         } catch (e) {
-                console.log(import.meta.env.VITE_VERCEL_ENV)
-                window.location.href = "/.ory/ui/login" + (import.meta.env.VITE_VERCEL_ENV != 'production' ? '' : '?return_to='+window.location.origin)
+                window.location.href = "/.ory/ui/login" + (vercelEnv != 'production' ? '' : '?return_to='+window.location.origin)
         }
     }
 })

@@ -10,7 +10,7 @@ import {logoutUrl, ory, session} from "@/auth/auth";
 import "vue-toastification/dist/index.css"
 import type {PluginOptions} from "vue-toastification/dist/types/types";
 import VueToastificationPlugin, {POSITION} from "vue-toastification";
-import {faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faMinus, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
 
 const vercelEnv = import.meta.env.VITE_VERCEL_ENV
 const app = createApp(App)
@@ -22,7 +22,7 @@ const options : PluginOptions = {
     maxToasts: 20,
 }
 
-library.add(faCircleXmark, faXmark, faPlus)
+library.add(faCircleXmark, faXmark, faPlus, faMinus)
 
 router.beforeEach(async (to, from) => {
     if (session.value == undefined) {

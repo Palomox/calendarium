@@ -1,9 +1,13 @@
 <template>
 <div class="w-32 h-32 xl:w-48 xl:h-48 border border-gray-700 xl:border-2 rounded-md m-0.5 xl:m-2 flex flex-col items-center">
-  <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center hover:cursor-default" :style="getInlineStyles" :textContent="props.day" @click="openPopup"/>
-  <popup-component class="relative left-16 bottom-8 z-50" v-if="open" @close_edit="openPopup">
-    <button :class="editing ? 'save-button' : 'regular-button'" class="p-1" @click="editing = !editing" v-text="editing? 'Guardar' : 'Editar'" />
-  </popup-component>
+  <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center hover:cursor-default" :style="dayStyle" @click="open = true">
+    <span ref="today" :textContent="props.day"/>
+  </span>
+  <teleport to="#popuplayer">
+    <popup-component :style="popupStyle" class="absolute z-50" v-if="open" @close_popup="togglePopup">
+      <button :class="editing ? 'save-button' : 'regular-button'" class="p-1 pointer-events-auto" @click="editing = !editing" v-text="editing? 'Guardar' : 'Editar'" />
+    </popup-component>
+  </teleport>
   <div class="flex flex-col overflow-y-scroll relative p-2 gap-2 w-full">
     <h1 class="font-bold text-xl text-left mb-1" :hidden="!editing" v-text="editing? 'Eventos:' : ''"/>
     <event-component :editing="editing" :key="calendarEvent.label" v-for="calendarEvent of eventsForToday" :entry="calendarEvent"/>
@@ -15,7 +19,6 @@
     <button v-if="editing" @click="newTask()" class="regular-button w-6 h-6 m-auto">
       <font-awesome-icon icon="fa-solid fa-plus" />
     </button>
-
   </div>
 </div>
 </template>
@@ -38,6 +41,8 @@
     day: number
   }>()
 
+  const today = ref(null)
+
   const viewStore = useViewStore()
 
   let open = ref(false)
@@ -48,25 +53,48 @@
 
   let dayString = props.day+"-"+props.month+"-"+props.year;
 
-  function newEvent(){
-    viewStore.editingPopup = "event";
 
-    let editingEvent = Object.assign({}, newEventStore)
-
-    editingEvent.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
-
-    viewStore.editingEvent = editingEvent;
+  function togglePopup(){
+    open.value = !open.value
   }
 
-  function newTask(){
-    viewStore.editingPopup = "task";
+  const popupStyle = computed(() => {
+    let bounding = (<unknown>today.value as HTMLElement).getBoundingClientRect()
 
-    let editingTask = Object.assign({}, newTaskStore)
+    let left = bounding.left
+    let top = bounding.top + window.scrollY;
 
-    editingTask.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
+    let width = 2 * parseFloat(getComputedStyle(document.documentElement).fontSize) // 2 rem to pixels
 
-    viewStore.editingTask = editingTask
-  }
+    return `left: ${left+width}px; top: ${top}px`
+  })
+
+  const dayStyle = computed(() => {
+    let bgColor = periodsForToday.value.length != 0? 'background-color: ' + periodsForToday.value[0].color + '; ' : '';
+
+
+    let colorHex;
+    if (eventsForToday.value.length == 0) {
+      if(periodsForToday.value.length == 0){
+        colorHex = "#ffffff"
+      } else {
+        let color = periodsForToday.value[0].color
+
+        let triplet = StringUtils.hexToRgb(color)
+
+        if(triplet == null){
+          colorHex = "#ffffff"
+        } else {
+          colorHex = (triplet.r * 0.299 + triplet.g * 0.587 + triplet.b * 0.114) > 186 ? '#000000' : '#ffffff'
+        }
+      }
+    } else {
+      colorHex = useEventStore().eventTypes.event_types[eventsForToday.value[0].type].color
+    }
+    let textColor = 'color: ' + colorHex + ';'
+
+    return bgColor + textColor
+  })
 
 
   watch(useEventStore().events, () => {
@@ -98,42 +126,30 @@
     tasksForToday.value = tasks;
   })
 
+  function newEvent(){
+    viewStore.editingPopup = "event";
 
-  const getInlineStyles = computed(() => {
-    let bgColor = periodsForToday.value.length != 0? 'background-color: ' + periodsForToday.value[0].color + '; ' : '';
+    let editingEvent = Object.assign({}, newEventStore)
 
+    editingEvent.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
 
-    let colorHex;
-    if (eventsForToday.value.length == 0) {
-      if(periodsForToday.value.length == 0){
-        colorHex = "#ffffff"
-      } else {
-        let color = periodsForToday.value[0].color
-
-        let triplet = StringUtils.hexToRgb(color)
-
-        if(triplet == null){
-          colorHex = "#ffffff"
-        } else {
-          colorHex = (triplet.r * 0.299 + triplet.g * 0.587 + triplet.b * 0.114) > 186 ? '#000000' : '#ffffff'
-        }
-      }
-    } else {
-      colorHex = useEventStore().eventTypes.event_types[eventsForToday.value[0].type].color
-    }
-    let textColor = 'color: ' + colorHex + ';'
-
-    return bgColor + textColor
-  })
-
-
-  function openPopup(){
-    open.value = !open.value
+    viewStore.editingEvent = editingEvent;
   }
 
+  function newTask(){
+    viewStore.editingPopup = "task";
+
+    let editingTask = Object.assign({}, newTaskStore)
+
+    editingTask.date = props.year+"-"+props.month.toString().padStart(2, "0")+"-"+props.day.toString().padStart(2, "0")
+
+    viewStore.editingTask = editingTask
+  }
 </script>
 <style scoped>
 div>div{
   scrollbar-width: thin;
 }
+
+
 </style>

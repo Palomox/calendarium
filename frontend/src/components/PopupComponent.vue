@@ -1,10 +1,38 @@
 <template>
-  <div id="popup" class="relative p-2 bg-zinc-700 inline-block rounded-r-md rounded-b-md">
+  <div ref="container" id="popup" class="relative p-2 bg-zinc-700 inline-block rounded-r-md rounded-b-md">
     <slot/>
   </div>
 </template>
 <script setup lang="ts">
+import {onMounted, onUnmounted, ref} from "vue";
 
+  const emits = defineEmits(['close_popup'])
+
+  const container = ref(null)
+
+
+
+  onMounted(() => {
+    document.addEventListener("click", () => {
+      // This registers the click of when the popup is opened, and adds an event listener for further clicks
+      document.addEventListener('click', clickListener)
+    } , {
+      once: true
+    })
+  });
+
+  onUnmounted(() => {
+    document.removeEventListener('click', clickListener)
+  })
+
+  function clickListener(event : MouseEvent) {
+    let boundingBox = (<unknown> container.value as HTMLElement).getBoundingClientRect()
+
+    if(event.x < boundingBox.left || boundingBox.top > event.y || boundingBox.right < event.x || event.y > boundingBox.bottom) {
+      // outside the popup
+      emits('close_popup')
+    }
+  }
 </script>
 <style scoped>
 #popup::after {

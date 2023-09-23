@@ -9,13 +9,13 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
 
 <template>
   <navbar-component/>
-  <edit-popup-component v-if="useViewStore().editingPopup != 'none'">
-    <edit-event-component :event="useViewStore().editingEvent" v-if="useViewStore().editingPopup == 'event'"/>
-    <edit-task-component :task="useViewStore().editingTask" v-if="useViewStore().editingPopup == 'task' "/>
-  </edit-popup-component>
-  <div class="absolute lg:top-16 top-8 right-0 w-full bottom-0 overflow-y-scroll">
-    <router-view :key="$route.fullPath"/>
+  <div id="popuplayer" class="z-[500] left-0 right-0 top-0 bottom-0 absolute pointer-events-none">
+    <edit-popup-component v-if="useViewStore().editingPopup != 'none'">
+      <edit-event-component :event="useViewStore().editingEvent" v-if="useViewStore().editingPopup == 'event'"/>
+      <edit-task-component :task="useViewStore().editingTask" v-if="useViewStore().editingPopup == 'task' "/>
+    </edit-popup-component>
   </div>
+  <router-view class="lg:mt-16 mt-8" :key="$route.fullPath"/>
 </template>
 
 <style>
@@ -24,7 +24,7 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
 @tailwind utilities;
 
 html{
-  @apply bg-zinc-950 text-white overflow-y-hidden;
+  @apply bg-zinc-950 text-white;
   scrollbar-width: thin;
 }
 

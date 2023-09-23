@@ -1,8 +1,10 @@
 <template>
 <div class="flex flex-row gap-1">
   <input @change="changeTask()" :checked="completed" type="checkbox">
-  <span @click="openTaskEditor()" class="hover:cursor-default" :textContent="props.task.label"/>
-  <button @click="deleteTask()" v-if="editing" class="bg-red-500 rounded-md w-6 h-6">-</button>
+  <span @click="openTaskEditor()" :class="completed ? 'line-through' : ''" class="hover:cursor-default" :textContent="props.task.label"/>
+  <button @click="deleteTask()" v-if="editing" class="ml-2 bg-red-500 rounded-md w-6 h-6">
+    <font-awesome-icon icon="fa-solid fa-minus"/>
+  </button>
 </div>
 </template>
 <script setup lang="ts">
@@ -12,6 +14,7 @@ import axios from "axios";
 import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
 import {useViewStore} from "@/stores/viewstore";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const props = defineProps<{
   task: CalendarTask

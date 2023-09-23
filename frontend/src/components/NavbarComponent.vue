@@ -1,5 +1,5 @@
 <template>
-<nav class="bg-zinc-800  shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8  w-full flex flex-row lg:gap-4 gap-1">
+<nav class="bg-zinc-800 fixed shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8 top-0 z-[1000] w-full flex flex-row lg:gap-4 gap-1">
   <button @click="toggleMenu" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" to="/">Calendarium</button>
   <popup-component class="z-50 top-16" v-if="menuOpened">
     <div class="flex flex-col m-2 gap-2">

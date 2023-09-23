@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-row items-center">
     <span @click="editEventPopup()" class="hover:cursor-default" :textContent="useEventStore().eventTypes.event_types[props.entry.type].prefix+' '+props.entry.label" :style="'color: '+useEventStore().eventTypes.event_types[props.entry.type].color" />
-    <button @click="deleteEvent()" v-if="editing" class="bg-red-500 rounded-md w-6 h-6">-</button>
+    <button @click="deleteEvent()" v-if="editing" class="ml-2 bg-red-500 rounded-md w-6 h-6">
+      <font-awesome-icon icon="fa-solid fa-minus"/>
+    </button>
   </div>
 </template>
 <script setup lang="ts">
@@ -12,6 +14,7 @@ import axios from "axios";
 import {useToast} from "vue-toastification";
 import EditEventPopupComponent from "@/components/EditPopupComponent.vue";
 import {useViewStore} from "@/stores/viewstore";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const props = defineProps<{
   entry : CalendarEvent

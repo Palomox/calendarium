@@ -1,14 +1,16 @@
 <template>
 <nav class="bg-zinc-800 fixed shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8 top-0 z-[1000] w-full flex flex-row lg:gap-4 gap-1">
-  <button @click="toggleMenu" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" to="/">Calendarium</button>
-  <popup-component class="z-50 top-16" v-if="menuOpened">
-    <div class="flex flex-col m-2 gap-2">
-      <a class="regular-button p-2" :href="logoutUrl">Cerrar Sesión</a>
-      <router-link to="/event_types" class="regular-button p-2">Editar tipos de eventos</router-link>
-      <router-link to="/periods" class="regular-button p-2">Editar periodos</router-link>
-      <router-link v-if="$route.meta.config != undefined && $route.meta.config == true" to="/" class="regular-button p-2">Volver al calendario</router-link>
-    </div>
-  </popup-component>
+  <button ref="entrypoint" @click="menuOpened = true" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" to="/">Calendarium</button>
+  <teleport to="#navpopuplayer">
+    <popup-component :style="popupPosition" class="absolute pointer-events-auto" v-if="menuOpened" @close_popup="toggleMenu" >
+      <div class="flex flex-col m-2 gap-2">
+        <a class="regular-button p-2" :href="logoutUrl">Cerrar Sesión</a>
+        <router-link to="/event_types" class="regular-button p-2">Editar tipos de eventos</router-link>
+        <router-link to="/periods" class="regular-button p-2">Editar periodos</router-link>
+        <router-link v-if="$route.meta.config != undefined && $route.meta.config == true" to="/" class="regular-button p-2">Volver al calendario</router-link>
+      </div>
+    </popup-component>
+  </teleport>
   <select :value="useViewStore().mode" @change="useViewStore().setMode((<any>$event).target.value); refreshPath()" class="lg:w-1/12 w-1/5 ml-auto h-3/4 rounded rounded-md text-black pl-2">
     <option value="year">Año</option>
     <option value="month">Mes</option>
@@ -33,7 +35,7 @@
 </nav>
 </template>
 <script setup lang="ts">
-import {onBeforeMount, onMounted, ref} from "vue";
+import {computed, onBeforeMount, onMounted, ref} from "vue";
 import router, {refreshPath} from "@/router";
 import {DateUtils} from "@/libs/dateutils";
 import {StringUtils} from "@/libs/stringutils";
@@ -42,9 +44,17 @@ import PopupComponent from "@/components/PopupComponent.vue";
 // @ts-ignore
 import { logoutUrl } from "@/auth/auth";
 
+const entrypoint = ref(null)
+
 let viewType = ref("year")
 let currentYear : number;
 let menuOpened = ref(false)
+
+const popupPosition = computed(() => {
+  let box = (<unknown>entrypoint.value as HTMLElement).getBoundingClientRect()
+
+  return `top: ${box.top+15}px; left: ${box.right+5}px;`
+});
 
 onBeforeMount(()=> {
   currentYear = new Date(Date.now()).getFullYear()

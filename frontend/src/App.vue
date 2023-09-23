@@ -8,6 +8,7 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
 </script>
 
 <template>
+  <div id="navpopuplayer" class="z-[1005] left-0 right-0 top-0 fixed pointer-events-none"/>
   <navbar-component/>
   <div id="popuplayer" class="z-[500] left-0 right-0 top-0 bottom-0 absolute pointer-events-none">
     <edit-popup-component v-if="useViewStore().editingPopup != 'none'">

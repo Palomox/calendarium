@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" id="popup" class="relative p-2 bg-zinc-700 inline-block rounded-r-md rounded-b-md">
+  <div ref="container" id="popup" class="p-2 bg-zinc-700 inline-block rounded-r-md rounded-b-md">
     <slot/>
   </div>
 </template>

@@ -12,7 +12,7 @@ import type {PluginOptions} from "vue-toastification/dist/types/types";
 import VueToastificationPlugin, {POSITION} from "vue-toastification";
 import {faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
 
-
+const vercelEnv = import.meta.env.VITE_VERCEL_ENV
 const app = createApp(App)
 const pinia = createPinia();
 
@@ -31,12 +31,12 @@ router.beforeEach(async (to, from) => {
             session.value = result.data
 
             ory.createBrowserLogoutFlow({returnTo: window.location.origin}).then(({data}) => {
-                logoutUrl.value = data.logout_url.replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/", "https://calendarium.vercel.app/.ory/")
+                logoutUrl.value = data.logout_url.replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/", "https://"+window.location.origin+"/.ory/")
             })
-            } catch (e) {
-                window.location.href = "/.ory/ui/login?return_to="+window.location.origin
-            }
+        } catch (e) {
+                window.location.href = "/.ory/ui/login" + (vercelEnv != 'production' ? '' : '?return_to='+window.location.origin)
         }
+    }
 })
 
 
@@ -46,4 +46,3 @@ app.use(VueToastificationPlugin, options)
 const eventStore = useEventStore()
 
 app.mount('#app')
-

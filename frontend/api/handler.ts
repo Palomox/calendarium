@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
 
-const localDomain = process.env.VERCEL_URL
+const localDomain = process.env.VERCEL_ENV != 'production' ? process.env.VERCEL_URL : "calendarium.vercel.app"
 
 // @ts-ignore
 const proxy = createProxyMiddleware({

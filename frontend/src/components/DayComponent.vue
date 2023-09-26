@@ -2,15 +2,14 @@
   <div class="h-8 w-8 m-0.5 rounded-md col-span-1 text-center">
     <button @click.left="openDetails" class="h-8 w-8 cursor-default border border-zinc-700 rounded-md"
             :style="getInlineStyles" v-text="props.day"/>
-    <popup-component class="left-10 bottom-8 min-w-max" v-if="detailsOpen">
-      <div class="flex flex-row">
-        <span>
-         <font-awesome-icon icon="fa-regular fa-circle-xmark" class="text-2xl hover:text-red-700"
+    <popup-component class="left-10 bottom-8 min-w-max" @close_popup="closeDetails" v-if="detailsOpen">
+      <div class="flex flex-row gap-4">
+        <font-awesome-icon icon="fa-regular fa-circle-xmark" class="text-2xl hover:text-red-700"
                             @click="closeDetails"/>
-        </span>
         <button @click="toggleEditing" class="hover:underline ml-auto" v-text="editing ? 'Guardar' : 'Editar'"/>
       </div>
-      <div class="relative flex flex-col items-start">
+
+      <div class="relative flex flex-col items-start gap-1">
         <h1 class="font-bold text-xl text-left mb-1" :hidden="eventsForToday.length == 0 && !editing" v-text="eventsForToday.length == 0 && !editing? '' : 'Eventos:'"/>
         <event-component :editing="editing" :key="event.label" v-for="event of eventsForToday" :entry="event"/>
         <button v-if="editing" @click="newEvent()" class="regular-button w-6 h-6 m-auto">

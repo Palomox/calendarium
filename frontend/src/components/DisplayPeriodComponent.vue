@@ -30,8 +30,13 @@
           <input @change="changeEndDate((<any>$event).target.value)" :value="endDateISO" type="date" class="text-black rounded-md p-1">
         </div>
       </div>
-
-
+      <div>
+        <span v-if="!editing" v-text="'Prioridad: '+period.priority" class="text-xl mr-2" />
+        <div v-else>
+          <label class="mr-2">Prioridad: </label>
+          <input v-model="period.priority" type="number" class="text-black rounded-md p-1">
+        </div>
+      </div>
     </div>
     <button v-if="!editing" @click="editing = true" class="ml-8 p-2 h-min regular-button">Editar</button>
     <button v-if="editing" @click="savePeriod()" class="ml-8 p-2 h-min save-button">Guardar</button>

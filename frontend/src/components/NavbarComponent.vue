@@ -1,6 +1,6 @@
 <template>
-<nav class="bg-zinc-800 fixed shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8 top-0 z-[1000] w-full flex flex-row lg:gap-4 gap-1">
-  <button ref="entrypoint" @click="menuOpened = true" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" to="/">Calendarium</button>
+<nav class="bg-zinc-700 fixed shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8 top-0 z-[1000] w-full flex flex-row lg:gap-4 gap-1">
+  <button ref="entrypoint" @click="menuOpened = true" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto">Calendarium</button>
   <teleport to="#navpopuplayer">
     <popup-component :style="popupPosition" class="absolute pointer-events-auto" v-if="menuOpened" @close_popup="toggleMenu" >
       <div class="flex flex-col m-2 gap-2">
@@ -35,8 +35,8 @@
 </nav>
 </template>
 <script setup lang="ts">
-import {computed, onBeforeMount, onMounted, ref} from "vue";
-import router, {refreshPath} from "@/router";
+import {computed, onBeforeMount, ref} from "vue";
+import {refreshPath} from "@/router";
 import {DateUtils} from "@/libs/dateutils";
 import {StringUtils} from "@/libs/stringutils";
 import {useViewStore} from "@/stores/viewstore";
@@ -46,7 +46,6 @@ import { logoutUrl } from "@/auth/auth";
 
 const entrypoint = ref(null)
 
-let viewType = ref("year")
 let currentYear : number;
 let menuOpened = ref(false)
 

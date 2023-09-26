@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" id="popup" class="p-2 bg-zinc-700 inline-block rounded-r-md rounded-b-md">
+  <div ref="container" id="popup" class="relative p-2 bg-zinc-800 shadow-md shadow-black inline-block rounded-r-md rounded-b-md">
     <slot/>
   </div>
 </template>
@@ -43,6 +43,6 @@ import {onMounted, onUnmounted, ref} from "vue";
   margin-left: -2rem;
   border-width: 1rem;
   border-style: solid;
-  border-color: transparent theme('colors.zinc.700') transparent transparent;
+  border-color: transparent theme('colors.zinc.800') transparent transparent;
 }
 </style>

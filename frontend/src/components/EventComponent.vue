@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row items-center">
-    <span @click="editEventPopup()" class="hover:cursor-default" :textContent="useEventStore().eventTypes.event_types[props.entry.type].prefix+' '+props.entry.label" :style="'color: '+useEventStore().eventTypes.event_types[props.entry.type].color" />
+    <span @click="editEventPopup()" class="hover:cursor-default leading-tight" :textContent="useEventStore().eventTypes.event_types[props.entry.type].prefix+' '+props.entry.label" :style="'color: '+useEventStore().eventTypes.event_types[props.entry.type].color" />
     <button @click="deleteEvent()" v-if="editing" class="ml-2 bg-red-500 rounded-md w-6 h-6">
       <font-awesome-icon icon="fa-solid fa-minus"/>
     </button>
@@ -9,10 +9,9 @@
 <script setup lang="ts">
 import type {CalendarEvent} from "@/libs/types";
 import {apiPath, useEventStore} from "@/stores/eventstore";
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import axios from "axios";
 import {useToast} from "vue-toastification";
-import EditEventPopupComponent from "@/components/EditPopupComponent.vue";
 import {useViewStore} from "@/stores/viewstore";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
@@ -44,7 +43,7 @@ function deleteEvent(){
       date: dateString
     },
     withCredentials: true
-  }).then(result => {
+  }).then(() => {
     toast.success(`Evento ${props.entry.label} eliminado éxitosamente`)
     delete useEventStore().events.events[dateString]
   }).catch(error => {

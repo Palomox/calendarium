@@ -1,6 +1,6 @@
 <template>
 <div class="w-32 h-32 xl:w-48 xl:h-48 border border-gray-700 xl:border-2 rounded-md m-0.5 xl:m-2 flex flex-col items-center">
-  <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center hover:cursor-default" :style="dayStyle" @click="open = true">
+  <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center rounded-t-sm hover:cursor-default" :style="dayStyle" @click="open = true">
     <span ref="today" :textContent="props.day"/>
   </span>
   <teleport to="#popuplayer">
@@ -23,19 +23,17 @@
 </div>
 </template>
 <script setup lang="ts">
-  import EntryComponent from "@/components/EventComponent.vue";
-  import EditDayComponent from "@/components/PopupComponent.vue";
-  import {computed, onBeforeMount, ref, watch} from "vue";
-  import {useEventStore} from "@/stores/eventstore";
-  import type {CalendarEvent, CalendarPeriod, CalendarTask} from "@/libs/types";
-  import PopupComponent from "@/components/PopupComponent.vue";
-  import EventComponent from "@/components/EventComponent.vue";
-  import TaskComponent from "@/components/TaskComponent.vue";
-  import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-  import {newEvent as newEventStore, newTask as newTaskStore, useViewStore} from "@/stores/viewstore";
-  import {StringUtils} from "@/libs/stringutils";
+import {computed, ref, watch} from "vue";
+import {useEventStore} from "@/stores/eventstore";
+import type {CalendarEvent, CalendarPeriod, CalendarTask} from "@/libs/types";
+import PopupComponent from "@/components/PopupComponent.vue";
+import EventComponent from "@/components/EventComponent.vue";
+import TaskComponent from "@/components/TaskComponent.vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {newEvent as newEventStore, newTask as newTaskStore, useViewStore} from "@/stores/viewstore";
+import {StringUtils} from "@/libs/stringutils";
 
-  const props = defineProps<{
+const props = defineProps<{
     year: number
     month: number
     day: number
@@ -122,8 +120,7 @@
 
   })
   watch(useEventStore().tasks, () => {
-    let tasks = useEventStore().tasks.tasks[dayString];
-    tasksForToday.value = tasks;
+    tasksForToday.value = useEventStore().tasks.tasks[dayString];
   })
 
   function newEvent(){

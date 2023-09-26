@@ -11,7 +11,7 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
   <div id="navpopuplayer" class="z-[1005] left-0 right-0 top-0 fixed pointer-events-none"/>
   <navbar-component/>
   <div id="popuplayer" class="z-[500] left-0 right-0 top-0 bottom-0 absolute pointer-events-none">
-    <edit-popup-component v-if="useViewStore().editingPopup != 'none'">
+    <edit-popup-component class="pointer-events-auto" v-if="useViewStore().editingPopup != 'none'">
       <edit-event-component :event="useViewStore().editingEvent" v-if="useViewStore().editingPopup == 'event'"/>
       <edit-task-component :task="useViewStore().editingTask" v-if="useViewStore().editingPopup == 'task' "/>
     </edit-popup-component>
@@ -25,7 +25,7 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
 @tailwind utilities;
 
 html{
-  @apply bg-zinc-950 text-white;
+  @apply bg-zinc-900 text-white;
   scrollbar-width: thin;
 }
 

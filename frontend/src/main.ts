@@ -4,13 +4,12 @@ import router from './router'
 import {createPinia} from "pinia";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faCircleXmark} from "@fortawesome/free-regular-svg-icons";
-import {useEventStore} from "@/stores/eventstore";
 import {logoutUrl, ory, session} from "@/auth/auth";
 
 import "vue-toastification/dist/index.css"
 import type {PluginOptions} from "vue-toastification/dist/types/types";
 import VueToastificationPlugin, {POSITION} from "vue-toastification";
-import {faMinus, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faMinus, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
 
 const vercelEnv = import.meta.env.VITE_VERCEL_ENV
 const app = createApp(App)
@@ -22,9 +21,9 @@ const options : PluginOptions = {
     maxToasts: 20,
 }
 
-library.add(faCircleXmark, faXmark, faPlus, faMinus)
+library.add(faCircleXmark, faXmark, faPlus, faMinus, faCheck)
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async () => {
     if (session.value == undefined) {
         try {
             let result = await ory.toSession()
@@ -43,6 +42,5 @@ router.beforeEach(async (to, from) => {
 app.use(router);
 app.use(pinia);
 app.use(VueToastificationPlugin, options)
-const eventStore = useEventStore()
 
 app.mount('#app')

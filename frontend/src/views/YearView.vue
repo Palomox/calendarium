@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-row  justify-center w-3/4 m-auto gap-4 flex-wrap">
+  <div class="flex flex-row w-3/4 gap-4 flex-wrap">
     <month-component v-for="index of 12" :month="years.months[index-1]" :year="years.years[index-1]" :big="false" />
   </div>
 </template>
 <script setup lang="ts">
 import {DateUtils} from "@/libs/dateutils";
 import MonthComponent from "@/components/MonthComponent.vue";
-import {onBeforeMount, onMounted, onUpdated, watch, watchEffect} from "vue";
+import {onBeforeMount} from "vue";
 import {useViewStore} from "@/stores/viewstore";
 import {useEventStore} from "@/stores/eventstore";
 

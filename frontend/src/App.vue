@@ -16,7 +16,7 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
       <edit-task-component :task="useViewStore().editingTask" v-if="useViewStore().editingPopup == 'task' "/>
     </edit-popup-component>
   </div>
-  <router-view class="lg:mt-16 mt-8" :key="$route.fullPath"/>
+  <router-view class="lg:mt-16 mt-8 mx-auto" :key="$route.fullPath"/>
 </template>
 
 <style>

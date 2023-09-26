@@ -4,7 +4,7 @@
     <font-awesome-icon class="w-full h-full" v-if="completed" icon="fa-solid fa-check" />
   </div>
   <p @click="openTaskEditor()" :class="completed ? 'line-through' : ''" class="hover:cursor-default leading-tight" :textContent="props.task.label"/>
-  <button @click="deleteTask()" v-if="editing" class="ml-2 bg-red-500 rounded-md w-6 h-6">
+  <button @click="deleteTask()" v-if="editing" class="flex-shrink-0 ml-2 bg-red-500 rounded-md w-6 h-6">
     <font-awesome-icon icon="fa-solid fa-minus"/>
   </button>
 </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row items-center">
     <span @click="editEventPopup()" class="hover:cursor-default leading-tight" :textContent="useEventStore().eventTypes.event_types[props.entry.type].prefix+' '+props.entry.label" :style="'color: '+useEventStore().eventTypes.event_types[props.entry.type].color" />
-    <button @click="deleteEvent()" v-if="editing" class="ml-2 bg-red-500 rounded-md w-6 h-6">
+    <button @click="deleteEvent()" v-if="editing" class="flex-shrink-0 ml-2 bg-red-500 rounded-md w-6 h-6">
       <font-awesome-icon icon="fa-solid fa-minus"/>
     </button>
   </div>

@@ -1,3 +1,7 @@
+[[plugins]]
+package = "netlify-plugin-bundle-env"
+[plugins.inputs]
+extensions = ["js", "ts", "mts"]
 [[redirects]]
 from = "/api/*"
 to = "https://calendarium-api.hopoke.workers.dev/api/:splat"

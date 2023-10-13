@@ -5,6 +5,7 @@ import {Response} from "http-proxy-middleware/dist/types";
 const localDomain = process.env.CONTEXT != 'production' ? process.env.DEPLOY_URL : process.env.URL;
 
 export default async (req: Request, context: Context) => {
+    console.log(localDomain)
     let response : Response;
     proxy(req, response, localDomain)
     return response

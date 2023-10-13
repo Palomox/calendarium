@@ -1,12 +1,14 @@
 import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
 
-export function proxy(request, response, localDomain){
+export function proxy(request : any, response : any, localDomain: string){
     let proxy = createProxy(localDomain)
-
+    // @ts-ignore
     proxy(request, response)
 }
 
-export function createProxy(localDomain) {
+export function createProxy(localDomain: string) {
+
+    // @ts-ignore
     return createProxyMiddleware({
         target: "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com",
         changeOrigin: true,
@@ -33,6 +35,5 @@ export function createProxy(localDomain) {
             // @ts-ignore
             return response.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://"+localDomain+"/.ory")
         }),
-    });
-
+    })
 }

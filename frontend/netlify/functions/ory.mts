@@ -1,6 +1,6 @@
 import type {Config, Context} from "@netlify/functions"
 import {proxy} from "../../src/proxy/oryProxy";
-import {Response} from "http-proxy-middleware/dist/types";
+import {Response} from "http-proxy-middleware/dist/types.js";
 
 const localDomain = process.env.CONTEXT != 'production' ? process.env.DEPLOY_URL : process.env.URL;
 

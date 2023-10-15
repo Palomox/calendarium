@@ -3,9 +3,8 @@ import {Env} from "../worker";
 import {error} from "itty-router";
 import {getPostgresClient} from "../utils";
 
-export async function getEventTypes(request: RequestWithMiddleware, env: Env) {
+export async function getEventTypes(request: RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	const client = await getPostgresClient(env);
-
 	let response = await client.query({text: "SELECT type as name, json_build_object('name', type, 'color', color, 'prefix', prefix) as type FROM event_types WHERE user_id=$1", values: [request.session.identity.id]})
 
 	let eventTypes = new Map()
@@ -14,12 +13,12 @@ export async function getEventTypes(request: RequestWithMiddleware, env: Env) {
 		eventTypes.set(row.name, row.type)
 	}
 
-	await client.end()
+	ctx.waitUntil(client.end())
 
 	return Object.fromEntries(eventTypes)
 }
 
-export async function alterEventType(request : RequestWithMiddleware, env: Env) {
+export async function alterEventType(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	let prefix = request.content.prefix
 	let type = request.content.type
 	let color = request.content.color
@@ -35,7 +34,6 @@ export async function alterEventType(request : RequestWithMiddleware, env: Env) 
 		query = "UPDATE event_types SET color=$3, prefix=$4, type=$5 WHERE type=$2 AND user_id=$1"
 
 		values = [user_id, oldName, color, prefix, type]
-		console.log(JSON.stringify(values))
 	} else {
 		// We insert
 		query = "INSERT INTO event_types(color, prefix, type, user_id) VALUES ($1, $2, $3, $4)"
@@ -56,6 +54,7 @@ export async function alterEventType(request : RequestWithMiddleware, env: Env) 
 				values: [user_id, oldName, type]
 			})
 		}
+		ctx.waitUntil(client.end())
 		return {status: 200}
 	} catch (e){
 		// @ts-ignore
@@ -65,7 +64,7 @@ export async function alterEventType(request : RequestWithMiddleware, env: Env) 
 }
 
 
-export async function deleteEventType(request : RequestWithMiddleware, env: Env) {
+export async function deleteEventType(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	let type = request.content.type
 	let user_id = request.session.identity.id
 
@@ -76,6 +75,8 @@ export async function deleteEventType(request : RequestWithMiddleware, env: Env)
 			text: "DELETE FROM event_types WHERE type=$1 AND user_id=$2",
 			values: [type, user_id]
 		})
+
+		ctx.waitUntil(client.end())
 
 		if(response.rowCount==0){
 			return error(401, "Specified event type does not exist")

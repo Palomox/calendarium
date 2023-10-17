@@ -3,19 +3,19 @@ import {Env} from "../worker";
 import {error} from "itty-router";
 import {getPostgresClient} from "../utils";
 
-export async function getPeriods(request: RequestWithMiddleware, env: Env) {
+export async function getPeriods(request: RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	const client = await getPostgresClient(env);
 
 	let response = await client.query({text: "SELECT name, color, startDate, endDate, priority FROM periods WHERE user_id=$1", values: [request.session.identity.id]})
 
 	let periods = response.rows;
 
-	await client.end()
+	ctx.waitUntil(client.end())
 
 	return {"periods": periods};
 }
 
-export async function alterPeriod(request : RequestWithMiddleware, env: Env) {
+export async function alterPeriod(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 
 	let name = request.content.name
 	let startDate = request.content.startDate
@@ -47,6 +47,8 @@ export async function alterPeriod(request : RequestWithMiddleware, env: Env) {
 			text: query,
 			values: values,
 		})
+		ctx.waitUntil(client.end())
+
 		return {status: 200}
 	} catch (e){
 		// @ts-ignore
@@ -56,7 +58,7 @@ export async function alterPeriod(request : RequestWithMiddleware, env: Env) {
 }
 
 
-export async function deletePeriod(request : RequestWithMiddleware, env: Env) {
+export async function deletePeriod(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	let name = request.content.name
 	let startDate = request.content.startDate
 	let endDate = request.content.endDate
@@ -71,9 +73,12 @@ export async function deletePeriod(request : RequestWithMiddleware, env: Env) {
 			values: [name, user_id, startDate, endDate]
 		})
 
+		ctx.waitUntil(client.end())
+
 		if(response.rowCount==0){
 			return error(401, "Specified period does not exist")
 		}
+
 		return {status: 200}
 	} catch (e){
 		// @ts-ignore

@@ -25,9 +25,13 @@ const {preflight, corsify} = createCors({
 	}
 })
 router
+	/*
+		Debug test
+	 */
 	.all("*", preflight)
 	.all("*", authenticate)
 	.all("*", withContent)
+
 	/*
 		Events API
 	 */
@@ -60,7 +64,6 @@ router
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-
 		let rawResponse = await router.handle(request, env, ctx);
 		let response = corsify(json(rawResponse))
 

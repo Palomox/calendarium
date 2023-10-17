@@ -17,6 +17,7 @@ export default async function authenticate(request: RequestWithMiddleware, env: 
 	// get our cookies from the header
 	const cookies = request.headers.has("Cookie")? <string>request.headers.get("Cookie") : undefined
 
+
 	try {
 		const resp = await ory.toSession({ cookie: cookies })
 		request.session = resp.data

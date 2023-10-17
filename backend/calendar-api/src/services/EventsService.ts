@@ -3,7 +3,7 @@ import {Env} from "../worker";
 import {error} from "itty-router";
 import {getDateFromString, getPostgresClient} from "../utils";
 
-export async function getEvents(request: RequestWithMiddleware, env: Env) {
+export async function getEvents(request: RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	const client = await getPostgresClient(env);
 
 	let startDateString = request.query.startDate
@@ -25,7 +25,6 @@ export async function getEvents(request: RequestWithMiddleware, env: Env) {
 		values = [request.session.identity.id, getDateFromString(endDateString).toUTCString()]
 	}
 
-
 	let response = await client.query({text: query, values: values})
 	let map = new Map();
 
@@ -33,16 +32,14 @@ export async function getEvents(request: RequestWithMiddleware, env: Env) {
 		let date = new Date(row.date)
 		map.set(date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear(), row.event)
 	}
-	await client.end()
+	ctx.waitUntil(client.end())
 
 	return Object.fromEntries(map);
 }
 
-export async function alterEvent(request : RequestWithMiddleware, env: Env) {
+export async function alterEvent(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	let labelQuery = request.query.label;
 	let dateQueryString = request.query.date;
-
-
 
 
 	let label = request.content.label
@@ -70,6 +67,8 @@ export async function alterEvent(request : RequestWithMiddleware, env: Env) {
 			text: query,
 			values: values
 		})
+
+		ctx.waitUntil(client.end())
 		return {status: 200}
 	} catch (e){
 		// @ts-ignore
@@ -79,7 +78,7 @@ export async function alterEvent(request : RequestWithMiddleware, env: Env) {
 }
 
 
-export async function deleteEvent(request : RequestWithMiddleware, env: Env) {
+export async function deleteEvent(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	let labelString = request.query.label
 	let dateString = request.query.date
 
@@ -99,6 +98,7 @@ export async function deleteEvent(request : RequestWithMiddleware, env: Env) {
 			values: [date, user_id, label]
 		})
 
+		ctx.waitUntil(client.end())
 	if(response.rowCount==0){
 		return error(400, "Specified event does not exist")
 	}

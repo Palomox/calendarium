@@ -3,7 +3,7 @@ import {Env} from "../worker";
 import {error} from "itty-router";
 import {getDateFromString, getPostgresClient} from "../utils";
 
-export async function getTasks(request: RequestWithMiddleware, env: Env) { // Actually write tasks service!!!
+export async function getTasks(request: RequestWithMiddleware, env: Env, ctx: ExecutionContext) { // Actually write tasks service!!!
 	const client = await getPostgresClient(env);
 
 	let startDateString = request.query.startDate
@@ -37,12 +37,12 @@ export async function getTasks(request: RequestWithMiddleware, env: Env) { // Ac
 		let date = new Date(row.date)
 		map.set(date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear(), row.task)
 	}
-	await client.end()
+	ctx.waitUntil(client.end())
 
 	return Object.fromEntries(map);
 }
 
-export async function createTask(request : RequestWithMiddleware, env: Env) {
+export async function createTask(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 
 	let label = request.content.label
 	let completed = request.content.completed
@@ -56,6 +56,8 @@ export async function createTask(request : RequestWithMiddleware, env: Env) {
 			text: "INSERT INTO tasks(date, user_id, label, completed) VALUES ($1, $2, $3, $4)",
 			values: [date, user_id, label, completed]
 		})
+
+		ctx.waitUntil(client.end())
 		return {status: 200}
 	} catch (e){
 		// @ts-ignore
@@ -65,7 +67,7 @@ export async function createTask(request : RequestWithMiddleware, env: Env) {
 }
 
 
-export async function deleteTask(request : RequestWithMiddleware, env: Env) {
+export async function deleteTask(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	let labelString = request.query.label
 	let dateString = request.query.date
 
@@ -85,6 +87,8 @@ export async function deleteTask(request : RequestWithMiddleware, env: Env) {
 			values: [date, user_id, label]
 		})
 
+		ctx.waitUntil(client.end())
+
 		if(response.rowCount==0){
 			return error(401, "Specified task does not exist")
 		}
@@ -98,7 +102,7 @@ export async function deleteTask(request : RequestWithMiddleware, env: Env) {
 
 
 
-export async function editTask(request : RequestWithMiddleware, env: Env) {
+export async function editTask(request : RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	let labelString = request.query.label
 	let dateString = request.query.date
 
@@ -135,7 +139,6 @@ export async function editTask(request : RequestWithMiddleware, env: Env) {
 		values[values.length] = completed
 	}
 
-	const client = await getPostgresClient(env)
 
 	if (setting.length == 0){
 		return error(400, "No parameters are being modified")
@@ -143,7 +146,7 @@ export async function editTask(request : RequestWithMiddleware, env: Env) {
 
 	setting = setting.substring(0, setting.length-1)
 
-	console.log(baseQuery+setting+conditions)
+	const client = await getPostgresClient(env)
 
 	try {
 		let response = await client.query({
@@ -151,6 +154,7 @@ export async function editTask(request : RequestWithMiddleware, env: Env) {
 			values: values
 		})
 
+		ctx.waitUntil(client.end())
 		if(response.rowCount==0){
 			return error(400, "Specified task does not exist")
 		}

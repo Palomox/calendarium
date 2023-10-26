@@ -1,2 +1,5 @@
 .vercel
 .idea
+
+# Local Netlify folder
+.netlify

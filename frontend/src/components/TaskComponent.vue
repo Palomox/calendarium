@@ -3,7 +3,7 @@
   <div id="checkbox" @click="changeTask" class="rounded-sm flex-shrink-0 w-5 h-5 bg-gray-700 text-center align-middle" >
     <font-awesome-icon class="w-full h-full hover:opacity-100 opacity-0" :class="completed ? 'opacity-100' : ''" icon="fa-solid fa-check" />
   </div>
-  <p @click="openTaskEditor()" :class="completed ? 'line-through' : ''" class="hover:cursor-default leading-tight" :textContent="props.task.label"/>
+  <p @click="openTaskEditor()" :class="completed ? 'line-through' : ''" class="hover:cursor-default leading-tight hyphens-auto" :textContent="props.task.label"/>
   <button @click="deleteTask()" v-if="editing" class="flex-shrink-0 ml-2 bg-red-500 rounded-md w-6 h-6">
     <font-awesome-icon icon="fa-solid fa-minus"/>
   </button>

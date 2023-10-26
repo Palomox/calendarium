@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"npm:serve\" \"npm:proxy\"",
     "serve": "vite --host",
-    "proxy": "ory proxy http://localhost:5173 --project romantic-satoshi-kojdtfzsl2 --dev",
+    "proxy": "ory proxy http://localhost:5173 -y --project romantic-satoshi-kojdtfzsl2 --dev",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",

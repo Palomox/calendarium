@@ -19,6 +19,7 @@
   import axios from "axios";
   import {useToast} from "vue-toastification";
   import {useViewStore} from "@/stores/viewstore";
+  import {handleError} from "@/apiwrapper/errormanager";
 
   const props = defineProps<{
     event: CalendarEvent
@@ -51,7 +52,7 @@
       toast.success(`Evento ${props.event.new != undefined ? 'creado' : 'modificado'} exitosamente`)
       useViewStore().editingPopup = "none"
     }).catch(error => {
-      toast.error(error.message)
+      handleError(error)
     })
   }
 </script>

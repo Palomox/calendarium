@@ -41,6 +41,7 @@ import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
 import {onBeforeMount, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {handleError} from "@/apiwrapper/errormanager";
 
 
 const props = defineProps<{
@@ -77,7 +78,7 @@ function saveType() {
     toasts.success("Tipo de evento modificado con éxito")
     useEventStore().fetchEventTypesFromApi()
   }).catch(error => {
-    toasts.error(error.message)
+    handleError(error)
   })
 }
 function deleteType(){
@@ -92,7 +93,7 @@ function deleteType(){
     toasts.success(`Tipo de evento ${eventType.value.name} eliminado`)
     delete useEventStore().eventTypes.event_types[eventType.value.name]
   }).catch((error) => {
-    toasts.error(error.message)
+    handleError(error)
   })
 }
 

@@ -14,6 +14,7 @@ import axios from "axios";
 import {useToast} from "vue-toastification";
 import {useViewStore} from "@/stores/viewstore";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {handleError} from "@/apiwrapper/errormanager";
 
 const props = defineProps<{
   entry : CalendarEvent
@@ -47,7 +48,7 @@ function deleteEvent(){
     toast.success(`Evento ${props.entry.label} eliminado éxitosamente`)
     delete useEventStore().events.events[dateString]
   }).catch(error => {
-    toast.error(error.message)
+    handleError(error)
   })
 }
 </script>

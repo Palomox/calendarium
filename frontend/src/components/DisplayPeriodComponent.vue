@@ -54,6 +54,7 @@ import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
 import {computed, onBeforeMount, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {handleError} from "@/apiwrapper/errormanager";
 
 
 const props = defineProps<{
@@ -124,7 +125,7 @@ function savePeriod() {
     toasts.success("Periodo modificado con éxito")
     useEventStore().fetchPeriodsFromApi()
   }).catch(error => {
-    toasts.error(error.message)
+    handleError(error)
   })
 }
 function deletePeriod(){
@@ -149,7 +150,7 @@ function deletePeriod(){
 
     useEventStore().fetchPeriodsFromApi()
   }).catch((error) => {
-    toasts.error(error.message)
+    handleError(error)
   })
 }
 

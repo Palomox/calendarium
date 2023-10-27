@@ -17,6 +17,7 @@ import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useToast} from "vue-toastification";
 import {useViewStore} from "@/stores/viewstore";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {handleError} from "@/apiwrapper/errormanager";
 
 const props = defineProps<{
   task: CalendarTask
@@ -50,7 +51,7 @@ function deleteTask(){
     toast.success("Tarea eliminada exitosamente")
     delete useEventStore().tasks.tasks[Number(splitDate[2])+"-"+Number(splitDate[1])+"-"+Number(splitDate[0])]
   }).catch(error => {
-    toast.error(error.message)
+    handleError(error)
   })
 }
 
@@ -68,10 +69,11 @@ function changeTask(){
   }).then(() => {
     toast.success("Tarea modificada exitosamente")
   }).catch(error => {
-    toast.error(error.message)
+    completed.value = !completed.value
+    handleError(error)
   })
-
   completed.value = !completed.value
+
 }
 
 </script>

@@ -16,6 +16,7 @@ import {apiPath, useEventStore} from "@/stores/eventstore";
 import {useViewStore} from "@/stores/viewstore";
 import {ref} from "vue";
 import axios from "axios";
+import {handleError} from "@/apiwrapper/errormanager";
 
 const props = defineProps<{
   task: CalendarTask
@@ -58,7 +59,7 @@ function editTask(){
     toast.success(`Tarea ${props.task.new != undefined ? 'creada' : 'modificada'} exitosamente`)
     useViewStore().editingPopup = "none"
   }).catch(error => {
-    toast.error(error.message)
+    handleError(error)
   })
 
 }

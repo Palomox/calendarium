@@ -1,6 +1,10 @@
 <template>
-<div class="flex flex-col items-center p-2">
-  <router-link v-if="!big" :to="'/year/'+props.year+'/month/'+props.month" class="font-bold text-3xl" :class="props.big ? 'lg:text-7xl' : '' " :textContent="StringUtils.capitalize(DateUtils.getMonth(props.month))+' '+props.year"/>
+  <div class="flex flex-col items-center p-2">
+    <div hidden v-if="props.big">
+      <key-press-listener  key-code="ArrowLeft" @pressed="router.push(previousMonthLink)"/>
+      <key-press-listener key-code="ArrowRight" @pressed="router.push(followingMonthLink)"/>
+    </div>
+    <router-link v-if="!big" :to="'/year/'+props.year+'/month/'+props.month" class="font-bold text-3xl" :class="props.big ? 'lg:text-7xl' : '' " :textContent="StringUtils.capitalize(DateUtils.getMonth(props.month))+' '+props.year"/>
   <div class="flex flex-col items-center" v-else>
     <router-link :to="'/year/'+props.year" class="font-bold text-3xl" :class="props.big ? 'lg:text-7xl' : '' " :textContent="props.year"/>
     <div class="flex flex-row gap-14 items-end" :class="props.big ? 'lg:text-6xl' : '' ">
@@ -19,7 +23,8 @@
     <day-component :key="index" :style="'grid-column-start: '+((index+monthOffset)-(((Math.ceil((index+monthOffset)/7)-1)*7)))+'; grid-row-start: '+ (Math.ceil((index+monthOffset)/7)+1)+';'" v-if="!props.big" :year=props.year :month=props.month :day=index v-for="index in DateUtils.getMonthDays(props.month, props.year)"/>
     <detailed-day-component :key="index" :style="'grid-column-start: '+((index+monthOffset)-(((Math.ceil((index+monthOffset)/7)-1)*7)))+'; grid-row-start: '+ (Math.ceil((index+monthOffset)/7)+1)+';'" v-if="props.big" :year=props.year :month=props.month :day=index v-for="index in DateUtils.getMonthDays(props.month, props.year)"/>
   </div>
-</div>
+  </div>
+
 </template>
 
 <script setup lang="ts">
@@ -29,6 +34,8 @@ import DayComponent from "@/components/DayComponent.vue";
 import {computed, onBeforeMount} from "vue";
 import DetailedDayComponent from "@/components/DetailedDayComponent.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import KeyPressListener from "@/components/KeyPressListener.vue";
+import router from "@/router";
 
 const props = defineProps<{
   month: number

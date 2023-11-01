@@ -9,7 +9,7 @@ import {logoutUrl, ory, session} from "@/auth/auth";
 import "vue-toastification/dist/index.css"
 import type {PluginOptions} from "vue-toastification/dist/types/types";
 import VueToastificationPlugin, {POSITION} from "vue-toastification";
-import {faCheck, faMinus, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeft, faArrowRight, faCheck, faMinus, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
 
 export const vercelEnv = import.meta.env.VITE_VERCEL_ENV
 const app = createApp(App)
@@ -21,7 +21,7 @@ const options : PluginOptions = {
     maxToasts: 20,
 }
 
-library.add(faCircleXmark, faXmark, faPlus, faMinus, faCheck)
+library.add(faCircleXmark, faXmark, faPlus, faMinus, faCheck, faArrowLeft, faArrowRight)
 
 
 app.use(router);

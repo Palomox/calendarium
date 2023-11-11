@@ -32,6 +32,7 @@ import TaskComponent from "@/components/TaskComponent.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {newEvent as newEventStore, newTask as newTaskStore, useViewStore} from "@/stores/viewstore";
 import {StringUtils} from "@/libs/stringutils";
+import {DateUtils} from "@/libs/dateutils";
 
 const props = defineProps<{
     year: number
@@ -48,6 +49,8 @@ const props = defineProps<{
   let eventsForToday = ref<CalendarEvent[]>([])
   let periodsForToday = ref<CalendarPeriod[]>([])
   let tasksForToday = ref<CalendarTask[]>([])
+  let mainEventType = ref<string>()
+
 
   let dayString = props.day+"-"+props.month+"-"+props.year;
 
@@ -87,17 +90,41 @@ const props = defineProps<{
         }
       }
     } else {
-      colorHex = useEventStore().eventTypes.event_types[eventsForToday.value[0].type].color
+      colorHex = useEventStore().eventTypes.event_types[mainEventType.value].color
     }
     let textColor = 'color: ' + colorHex + ';'
 
-    return bgColor + textColor
+    let today = new Date()
+    let todayString = DateUtils.getDateString(today)
+
+    let underline = todayString == dayString ? "text-decoration: underline;" : ""
+
+    return bgColor + textColor + underline
   })
 
 
   watch(useEventStore().events, () => {
     let events = useEventStore().events.events[dayString];
     eventsForToday.value = events == undefined ? [] : events;
+
+    if(eventsForToday.value.length==0){ return; }
+
+    let eventTypesCache = useEventStore().eventTypes.event_types
+
+
+    let maxPriority = 0
+    let maxPriorityEvent !: CalendarEvent
+
+    for (let iterEvent of eventsForToday.value){
+      let priority = eventTypesCache[iterEvent.type].priority
+      if (priority>maxPriority){
+        maxPriority = priority
+        maxPriorityEvent = iterEvent
+      }
+    }
+
+    mainEventType.value = maxPriorityEvent.type
+
   })
   watch(useEventStore().periods, () => {
     let periods : CalendarPeriod[] = [];

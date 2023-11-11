@@ -9,6 +9,7 @@ export type CalendarEventType = {
     name: string
     prefix: string
     color: string
+    priority: number
     new?:boolean
 }
 

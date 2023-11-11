@@ -7,6 +7,10 @@ export class DateUtils{
         return dateObject.toLocaleString(navigator.language, {month: "long"});
     }
 
+    static getDateString(date: Date):string {
+        return date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()
+    }
+
     static getFollowing12Months() {
         let date = new Date(Date.now());
         let months: number[] = [];

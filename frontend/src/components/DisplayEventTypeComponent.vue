@@ -17,7 +17,10 @@
         </div>
       </div>
       <div>
-        <span v-if="!editing" v-text="eventType.prefix.length == 0 ? 'Sin prefijo' : eventType.prefix" class="text-xl mr-2" />
+        <div v-if="!editing" >
+          <span v-if="eventType.prefix.length == 0" class="text-xl mr-2" >Sin prefijo</span>
+          <event-type-prefix v-else :event_type="eventType.name"/>
+        </div>
         <div v-else>
           <label class="mr-2">Prefijo: </label>
           <input v-model="eventType.prefix" type="text" class="text-black p-1 rounded-md">
@@ -50,6 +53,7 @@ import {useToast} from "vue-toastification";
 import {onBeforeMount, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {handleError} from "@/apiwrapper/errormanager";
+import EventTypePrefix from "@/components/EventTypePrefix.vue";
 
 
 const props = defineProps<{

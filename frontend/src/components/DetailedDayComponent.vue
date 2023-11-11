@@ -49,7 +49,7 @@ const props = defineProps<{
   let eventsForToday = ref<CalendarEvent[]>([])
   let periodsForToday = ref<CalendarPeriod[]>([])
   let tasksForToday = ref<CalendarTask[]>([])
-  let mainEventType = ref<string>()
+  let mainEventType = ref<string>("")
 
 
   let dayString = props.day+"-"+props.month+"-"+props.year;

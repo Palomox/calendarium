@@ -63,7 +63,7 @@ let periodsForToday = ref<CalendarPeriod[]>([])
 
 let tasksForToday = ref<CalendarTask[]>([])
 
-let mainEventType = ref<string>()
+let mainEventType = ref<string>("")
 
 function toggleEditing() {
   editing.value = !editing.value;

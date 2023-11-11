@@ -1,6 +1,6 @@
 <template>
 <nav class="bg-zinc-700 fixed shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8 top-0 z-[1000] w-full flex flex-row lg:gap-4 gap-1">
-  <button ref="entrypoint" @click="menuOpened = true" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto">Calendarium</button>
+  <button ref="entrypoint" @click="menuOpened = true" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" :textContent="appName"/>
   <teleport to="#navpopuplayer">
     <popup-component :style="popupPosition" class="absolute pointer-events-auto" v-if="menuOpened" @close_popup="toggleMenu" >
       <div class="flex flex-col m-2 gap-2">
@@ -43,6 +43,7 @@ import {useViewStore} from "@/stores/viewstore";
 import PopupComponent from "@/components/PopupComponent.vue";
 // @ts-ignore
 import { logoutUrl } from "@/auth/auth";
+import {appName} from "@/main";
 
 const entrypoint = ref(null)
 

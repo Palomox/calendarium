@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory, routerKey} from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from "@/views/HomeView.vue";
 import {useViewStore} from "@/stores/viewstore";
 import {logoutUrl, ory, session} from "@/auth/auth";
@@ -67,7 +67,7 @@ router.beforeEach(async () => {
             session.value = result.data
 
             ory.createBrowserLogoutFlow({returnTo: window.location.origin}).then(({data}) => {
-                logoutUrl.value = data.logout_url.replace("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com/", "https://"+window.location.origin+"/.ory/")
+                logoutUrl.value = data.logout_url.replace("https://"+import.meta.env.VITE_ORY_DOMAIN, "https://"+window.location.origin+"/.ory/")
             })
         } catch (e) {
             window.location.href = "/.ory/ui/login" + (vercelEnv == 'development' ? '' : '?return_to='+window.location.origin)

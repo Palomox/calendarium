@@ -1,5 +1,7 @@
 import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
 
+const oryDomain = import.meta.env.VITE_ORY_DOMAIN;
+
 export function proxy(request : any, response : any, localDomain: string){
     let proxy = createProxy(localDomain)
     // @ts-ignore
@@ -9,8 +11,8 @@ export function proxy(request : any, response : any, localDomain: string){
 export function createProxy(localDomain: string) {
 
     // @ts-ignore
-    return createProxyMiddleware({
-        target: "https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com",
+    let context = {
+        target: "https://"+oryDomain,
         changeOrigin: true,
         selfHandleResponse: true,
         pathRewrite: {
@@ -18,7 +20,6 @@ export function createProxy(localDomain: string) {
         },
         hostRewrite: true,
         cookieDomainRewrite: {
-            "romantic-satoshi-kojdtfzsl2.projects.oryapis.com": localDomain,
             ".oryapis.com": localDomain
         },
         onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
@@ -33,7 +34,12 @@ export function createProxy(localDomain: string) {
                 res.setHeader("location", (location.replace(ui, "/.ory/ui/")))
             }
             // @ts-ignore
-            return response.replaceAll("https://romantic-satoshi-kojdtfzsl2.projects.oryapis.com", "https://"+localDomain+"/.ory")
+            return response.replaceAll("https://"+oryDomain, "https://"+localDomain+"/.ory")
         }),
-    })
+    }
+    // @ts-ignore
+    context.cookieDomainRewrite[oryDomain] = localDomain
+
+    // @ts-ignore
+    return createProxyMiddleware(context)
 }

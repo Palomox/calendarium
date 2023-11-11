@@ -5,7 +5,7 @@ import {getPostgresClient} from "../utils";
 
 export async function getEventTypes(request: RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
 	const client = await getPostgresClient(env);
-	let response = await client.query({text: "SELECT type as name, json_build_object('name', type, 'color', color, 'prefix', prefix) as type FROM event_types WHERE user_id=$1", values: [request.session.identity.id]})
+	let response = await client.query({text: "SELECT type as name, json_build_object('name', type, 'color', color, 'prefix', prefix, 'priority', priority) as type FROM event_types WHERE user_id=$1", values: [request.session.identity.id]})
 
 	let eventTypes = new Map()
 
@@ -22,6 +22,7 @@ export async function alterEventType(request : RequestWithMiddleware, env: Env, 
 	let prefix = request.content.prefix
 	let type = request.content.type
 	let color = request.content.color
+	let priority = request.content.priority
 	let user_id = request.session.identity.id
 
 	let oldName = request.query.type;
@@ -31,13 +32,16 @@ export async function alterEventType(request : RequestWithMiddleware, env: Env, 
 
 	if(oldName != undefined){
 		// We update
-		query = "UPDATE event_types SET color=$3, prefix=$4, type=$5 WHERE type=$2 AND user_id=$1"
+		query = "UPDATE event_types SET color=$3, prefix=$4, type=$5, priority=$6 WHERE type=$2 AND user_id=$1"
 
-		values = [user_id, oldName, color, prefix, type]
+		values = [user_id, oldName, color, prefix, type, priority]
 	} else {
+		if(prefix == null ||type == null ||color == null ||priority == null){
+			return error(400, {status: "bad request", details: "missing data"})
+		}
 		// We insert
-		query = "INSERT INTO event_types(color, prefix, type, user_id) VALUES ($1, $2, $3, $4)"
-		values = [color, prefix, type, user_id]
+		query = "INSERT INTO event_types(color, prefix, type, user_id, priority) VALUES ($1, $2, $3, $4, $5)"
+		values = [color, prefix, type, user_id, priority]
 	}
 
 	const client = await getPostgresClient(env)

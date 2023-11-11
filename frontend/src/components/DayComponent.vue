@@ -39,6 +39,7 @@ import TaskComponent from "@/components/TaskComponent.vue";
 import EventComponent from "@/components/EventComponent.vue";
 import {useViewStore, newEvent as newEventStore, newTask as newTaskStore} from "@/stores/viewstore";
 import {StringUtils} from "@/libs/stringutils";
+import {DateUtils} from "@/libs/dateutils";
 
 const props = defineProps<{
   year: number
@@ -61,6 +62,8 @@ let eventsForToday = ref<CalendarEvent[]>([])
 let periodsForToday = ref<CalendarPeriod[]>([])
 
 let tasksForToday = ref<CalendarTask[]>([])
+
+let mainEventType = ref<string>("")
 
 function toggleEditing() {
   editing.value = !editing.value;
@@ -89,6 +92,23 @@ function newTask(){
 watch(eventStore.events, () => {
   let events = useEventStore().events.events[dayString];
   eventsForToday.value = events == undefined ? [] : events;
+
+  if(eventsForToday.value.length==0){ return; }
+
+  let eventTypesCache = useEventStore().eventTypes.event_types
+
+  let maxPriority = 0
+  let maxPriorityEvent !: CalendarEvent
+
+  for (let iterEvent of eventsForToday.value){
+    let priority = eventTypesCache[iterEvent.type].priority
+    if (priority>maxPriority){
+      maxPriority = priority
+      maxPriorityEvent = iterEvent
+    }
+  }
+
+  mainEventType.value = maxPriorityEvent.type
 })
 watch(eventStore.periods, () => {
   let periods : CalendarPeriod[] = [];
@@ -136,11 +156,17 @@ const getInlineStyles = computed(() => {
       }
     }
   } else {
-    colorHex = eventStore.eventTypes.event_types[eventsForToday.value[0].type].color
+    colorHex = eventStore.eventTypes.event_types[mainEventType.value].color
   }
+
   let textColor = 'color: ' + colorHex + ';'
 
-  return bgColor + textColor
+  let today = new Date()
+  let todayString = DateUtils.getDateString(today)
+
+  let underline = todayString == dayString ? "text-decoration: underline;" : ""
+
+  return bgColor + textColor + underline
 })
 
 function openDetails() {

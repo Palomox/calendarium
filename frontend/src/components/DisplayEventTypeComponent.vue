@@ -1,6 +1,6 @@
 <template>
   <div class="bg-zinc-700 rounded-md p-4 flex">
-    <div>
+    <div class="flex flex-col gap-2">
       <div>
         <span v-if="!editing" v-text="eventType.name" class="text-2xl font-bold mr-2"/>
         <div v-else>
@@ -8,7 +8,7 @@
           <input v-model="eventType.name" type="text" class="text-black p-1 rounded-md">
         </div>
       </div>
-      <div class="mt-2">
+      <div>
         <span v-if="!editing" v-text="'Color: '+eventType.color" :style="'color: '+eventType.color+';'" class="text-xl mr-2" />
         <div class="flex flex-row gap-2" v-else>
           <label>Color: </label>
@@ -16,13 +16,24 @@
           <input v-model="eventType.color" type="color" class="rounded-md">
         </div>
       </div>
-      <div class="mt-2">
-        <span v-if="!editing" v-text="eventType.prefix.length == 0 ? 'Sin prefijo' : eventType.prefix" class="text-xl mr-2" />
+      <div>
+        <div v-if="!editing" >
+          <span v-if="eventType.prefix.length == 0" class="text-xl mr-2" >Sin prefijo</span>
+          <event-type-prefix v-else :event_type="eventType.name"/>
+        </div>
         <div v-else>
           <label class="mr-2">Prefijo: </label>
           <input v-model="eventType.prefix" type="text" class="text-black p-1 rounded-md">
         </div>
       </div>
+      <div>
+        <span v-if="!editing" v-text="eventType.priority" class="text-xl mr-2" />
+        <div v-else>
+          <label class="mr-2">Prioridad: </label>
+          <input v-model="eventType.priority" type="number" class="text-black p-1 rounded-md">
+        </div>
+      </div>
+
 
     </div>
     <button v-if="!editing" @click="editing = true" class="ml-8 p-2 h-min regular-button">Editar</button>
@@ -42,6 +53,7 @@ import {useToast} from "vue-toastification";
 import {onBeforeMount, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {handleError} from "@/apiwrapper/errormanager";
+import EventTypePrefix from "@/components/EventTypePrefix.vue";
 
 
 const props = defineProps<{
@@ -67,7 +79,8 @@ function saveType() {
   axios.post(apiPath+"events/types", {
     type: eventType.value.name,
     color: eventType.value.color,
-    prefix: eventType.value.prefix
+    prefix: eventType.value.prefix,
+    priority: eventType.value.priority
   }, {
     params: {
       type: isNew.value ? undefined : props.eventType.name

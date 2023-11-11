@@ -45,6 +45,7 @@ export async function alterEvent(request : RequestWithMiddleware, env: Env, ctx:
 	let label = request.content.label
 	let type = request.content.type
 	let date = getDateFromString(request.content.date)
+	// @ts-ignore
 	let user_id = request.session.identity.id
 
 	let query : string;
@@ -88,6 +89,7 @@ export async function deleteEvent(request : RequestWithMiddleware, env: Env, ctx
 
 	let label = labelString
 	let date = getDateFromString(dateString)
+	// @ts-ignore
 	let user_id = request.session.identity.id
 
 	const client = await getPostgresClient(env)

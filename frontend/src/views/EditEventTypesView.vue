@@ -20,7 +20,8 @@ function addNewEvent() {
     name: "Nuevo tipo",
     color: "#ffffff",
     prefix: "",
-    new: true
+    new: true,
+    priority: 1
   }
 }
 onBeforeMount(() => {

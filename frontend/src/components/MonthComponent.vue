@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col items-center p-2">
     <div hidden v-if="props.big">
-      <key-press-listener  key-code="ArrowLeft" @pressed="router.push(previousMonthLink)"/>
-      <key-press-listener key-code="ArrowRight" @pressed="router.push(followingMonthLink)"/>
+      <key-press-listener  key-code="ArrowLeft" @pressed="jumpPrevious"/>
+      <key-press-listener key-code="ArrowRight" @pressed="jumpNext"/>
     </div>
     <router-link v-if="!big" :to="'/year/'+props.year+'/month/'+props.month" class="font-bold text-3xl" :class="props.big ? 'lg:text-7xl' : '' " :textContent="StringUtils.capitalize(DateUtils.getMonth(props.month))+' '+props.year"/>
   <div class="flex flex-col items-center" v-else>
@@ -36,6 +36,7 @@ import DetailedDayComponent from "@/components/DetailedDayComponent.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import KeyPressListener from "@/components/KeyPressListener.vue";
 import router from "@/router";
+import {useViewStore} from "@/stores/viewstore";
 
 const props = defineProps<{
   month: number
@@ -62,6 +63,19 @@ let followingMonthLink = computed(() => {
 
 })
 
+function jumpPrevious(){
+  if(useViewStore().editingPopup != "none") {
+    return;
+  }
+  router.push(previousMonthLink.value)
+}
+
+function jumpNext(){
+  if(useViewStore().editingPopup != "none") {
+    return;
+  }
+  router.push(followingMonthLink.value)
+}
 
 onBeforeMount(()=>{
   monthOffset = DateUtils.getMonthOffset(props.year, props.month)

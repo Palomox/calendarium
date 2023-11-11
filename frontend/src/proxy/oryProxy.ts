@@ -1,10 +1,14 @@
 import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
+import {ory} from "@/auth/auth";
 
-const oryDomain = import.meta.env.VITE_ORY_DOMAIN;
+let oryDomain : string
 
-export function proxy(request : any, response : any, localDomain: string){
+export function proxy(request : any, response : any, localDomain: string, oryDomainInput: string){
+    oryDomain = oryDomainInput
+
     let proxy = createProxy(localDomain)
     // @ts-ignore
+
     proxy(request, response)
 }
 

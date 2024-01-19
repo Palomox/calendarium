@@ -10,7 +10,8 @@
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "vite-build": "tsc"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",

@@ -1,5 +1,4 @@
 import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
-import {ory} from "@/auth/auth";
 
 let oryDomain : string
 

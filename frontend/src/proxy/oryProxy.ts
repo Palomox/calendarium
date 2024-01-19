@@ -3,7 +3,7 @@ import {ory} from "@/auth/auth";
 
 let oryDomain : string
 
-export function proxy(request : any, response : any, localDomain: string, oryDomainInput: string){
+function proxy(request : any, response : any, localDomain: string, oryDomainInput: string){
     oryDomain = oryDomainInput
 
     let proxy = createProxy(localDomain)
@@ -12,7 +12,7 @@ export function proxy(request : any, response : any, localDomain: string, oryDom
     proxy(request, response)
 }
 
-export function createProxy(localDomain: string) {
+function createProxy(localDomain: string) {
 
     // @ts-ignore
     let context = {
@@ -47,3 +47,5 @@ export function createProxy(localDomain: string) {
     // @ts-ignore
     return createProxyMiddleware(context)
 }
+
+module.exports = {proxy, createProxy}

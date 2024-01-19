@@ -70,7 +70,7 @@ router.beforeEach(async () => {
                 logoutUrl.value = data.logout_url.replace("https://"+import.meta.env.VITE_ORY_DOMAIN, "https://"+window.location.origin+"/.ory/")
             })
         } catch (e) {
-            window.location.href = "/.ory/ui/login" + (vercelEnv == 'development' ? '' : '?return_to='+window.location.origin)
+            window.location.href = "/.ory/ui/login" + (vercelEnv == 'development' ? '' : '?return_to='+window.location.href)
         }
     }
 })

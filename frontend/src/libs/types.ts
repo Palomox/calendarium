@@ -17,6 +17,12 @@ export type CalendarEventTypeMap = {
     [name: string]: CalendarEventType
 }
 
+export type EmojiList = {
+    [name: string]: {codepoints: string,
+        character_sequence: string}
+}
+
+
 export type CalendarTask = {
     label: string
     completed: boolean

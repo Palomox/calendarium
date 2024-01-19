@@ -1,5 +1,5 @@
 import {VercelRequest, VercelResponse} from "@vercel/node";
-import * as proxy from "./_oryProxy.js";
+import * as proxy from "./_oryProxy.cjs";
 
 
 const localDomain = process.env.VERCEL_ENV != 'production' ? process.env.VERCEL_URL : "calendarium.vercel.app";

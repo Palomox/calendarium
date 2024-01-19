@@ -12,4 +12,4 @@ function handler(
     proxy(request, response, localDomain, oryDomain)
 }
 
-module.exports = {handler}
+module.exports = handler

@@ -9,6 +9,7 @@ import "vue-toastification/dist/index.css"
 import type {PluginOptions} from "vue-toastification/dist/types/types";
 import VueToastificationPlugin, {POSITION} from "vue-toastification";
 import {faArrowLeft, faArrowRight, faCheck, faMinus, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
+import twemoji from "twemoji";
 
 export const vercelEnv = import.meta.env.VITE_VERCEL_ENV
 export const appName = import.meta.env.VITE_APP_NAME;
@@ -21,6 +22,7 @@ const options : PluginOptions = {
     position: POSITION.BOTTOM_RIGHT,
     maxToasts: 20,
 }
+
 
 library.add(faCircleXmark, faXmark, faPlus, faMinus, faCheck, faArrowLeft, faArrowRight)
 

@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-row items-center">
     <div>
-      <event-type-prefix :event_type="props.entry.type"/>
-      <span @click="editEventPopup()" class="hover:cursor-default leading-tight hyphens-auto" :textContent="props.entry.label" :style="'color: '+useEventStore().eventTypes.event_types[props.entry.type].color" />
+      <event-type-prefix v-if="hasPrefix" :event_type="props.entry.type"/>
+      <span @click="editEventPopup()" class="hover:cursor-default leading-tight hyphens-auto align-middle" :textContent="props.entry.label" :style="'color: '+color" />
     </div>
       <button @click="deleteEvent()" v-if="editing" class="flex-shrink-0 ml-2 bg-red-500 rounded-md w-6 h-6">
       <font-awesome-icon icon="fa-solid fa-minus"/>
@@ -20,12 +20,17 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {handleError} from "@/apiwrapper/errormanager";
 import EventTypePrefix from "@/components/EventTypePrefix.vue";
 
+
+
 const props = defineProps<{
   entry : CalendarEvent
   editing: boolean
 }>()
 
-const text = computed(() => useEventStore().eventTypes.event_types[props.entry.type].prefix+' '+props.entry.label)
+let eventType = useEventStore().eventTypes.event_types[props.entry.type]
+
+let color = computed(() => eventType.color)
+let hasPrefix = computed(() => eventType.prefix != '')
 
 const toast = useToast()
 

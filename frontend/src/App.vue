@@ -24,6 +24,13 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
 @tailwind components;
 @tailwind utilities;
 
+img.emoji {
+  height: 1.5em;
+  width: 1.5em;
+  margin: 0 .05em 0 .05em;
+  vertical-align: -0.1em;
+}
+
 html{
   @apply bg-zinc-900 text-white;
   scrollbar-width: thin;

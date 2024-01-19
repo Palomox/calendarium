@@ -54,6 +54,8 @@ import {onBeforeMount, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {handleError} from "@/apiwrapper/errormanager";
 import EventTypePrefix from "@/components/EventTypePrefix.vue";
+import {match} from "http-proxy-middleware/dist/context-matcher";
+import {findEmoji} from "@/emoji_helpers/emoji_helper";
 
 
 const props = defineProps<{

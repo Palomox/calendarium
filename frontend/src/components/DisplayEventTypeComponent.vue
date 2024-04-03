@@ -54,8 +54,6 @@ import {onBeforeMount, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {handleError} from "@/apiwrapper/errormanager";
 import EventTypePrefix from "@/components/EventTypePrefix.vue";
-import {match} from "http-proxy-middleware/dist/context-matcher";
-import {findEmoji} from "@/emoji_helpers/emoji_helper";
 
 
 const props = defineProps<{
@@ -88,7 +86,7 @@ function saveType() {
       type: isNew.value ? undefined : props.eventType.name
     },
     withCredentials: true
-  }).then(response => {
+  }).then(_ => {
     editing.value = false
     toasts.success("Tipo de evento modificado con éxito")
     useEventStore().fetchEventTypesFromApi()
@@ -104,7 +102,7 @@ function deleteType(){
 
   axios.delete(apiPath+"events/types", {withCredentials: true, data: {
       type: props.eventType.name
-  }}).then((response) => {
+  }}).then((_) => {
     toasts.success(`Tipo de evento ${eventType.value.name} eliminado`)
     delete useEventStore().eventTypes.event_types[eventType.value.name]
   }).catch((error) => {

@@ -1,4 +1,4 @@
-import {createProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
+import {legacyCreateProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
 
 let oryDomain : string
 
@@ -44,7 +44,7 @@ function createProxy(localDomain: string) {
     context.cookieDomainRewrite[oryDomain] = localDomain
 
     // @ts-ignore
-    return createProxyMiddleware(context)
+    return legacyCreateProxyMiddleware(context)
 }
 
 module.exports = {proxy, createProxy}

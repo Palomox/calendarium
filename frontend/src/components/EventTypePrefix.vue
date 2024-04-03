@@ -56,7 +56,7 @@ onBeforeMount(() => {
 
 })
 onMounted(() => {
-  twemoji.parse(box.value as HTMLElement, {folder: 'svg', ext: '.svg'})
+  twemoji.parse(box.value as HTMLElement, {folder: 'svg', ext: '.svg', base: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/"})
 })
 
 </script>

@@ -1,4 +1,4 @@
-import {legacyCreateProxyMiddleware, responseInterceptor} from "http-proxy-middleware";
+import {createProxyMiddleware, Options, responseInterceptor} from "http-proxy-middleware";
 
 let oryDomain : string
 
@@ -14,37 +14,41 @@ function proxy(request : any, response : any, localDomain: string, oryDomainInpu
 function createProxy(localDomain: string) {
 
     // @ts-ignore
-    let context = {
+    let context : Options = {
         target: "https://"+oryDomain,
         changeOrigin: true,
         selfHandleResponse: true,
         pathRewrite: {
             "^/.ory": "" // strip .ory from the url
         },
-        hostRewrite: true,
+        logger: console,
+        hostRewrite: localDomain,
         cookieDomainRewrite: {
             ".oryapis.com": localDomain
         },
-        onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
-            const response = responseBuffer.toString('utf8');
+        on: {
+            proxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
+                const response = responseBuffer.toString('utf8');
 
-            let location = proxyRes.headers["location"]
+                let location = proxyRes.headers["location"]
 
-            if(location != undefined) {
+                if(location != undefined) {
 
-                const ui = /\/ui\//gi
+                    const ui = /\/ui\//gi
 
-                res.setHeader("location", (location.replace(ui, "/.ory/ui/")))
-            }
-            // @ts-ignore
-            return response.replaceAll("https://"+oryDomain, "https://"+localDomain+"/.ory")
-        }),
+                    res.setHeader("location", (location.replace(ui, "/.ory/ui/")))
+                }
+                // @ts-ignore
+                return response.replaceAll("https://"+oryDomain, "https://"+localDomain+"/.ory")
+            }),
+        },
+
     }
     // @ts-ignore
     context.cookieDomainRewrite[oryDomain] = localDomain
 
     // @ts-ignore
-    return legacyCreateProxyMiddleware(context)
+    return createProxyMiddleware(context)
 }
 
 module.exports = {proxy, createProxy}

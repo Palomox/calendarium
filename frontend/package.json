@@ -20,7 +20,7 @@
     "@ory/client": "^1.9.0",
     "@vercel/node": "^3.0.26",
     "axios": "^1.6.5",
-    "http-proxy-middleware": "^2.0.6",
+    "http-proxy-middleware": "^3.0.0",
     "pinia": "^2.1.4",
     "twemoji": "^14.0.2",
     "vue": "^3.3.4",

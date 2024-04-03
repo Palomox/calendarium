@@ -36,7 +36,7 @@ function createProxy(localDomain: string) {
 
                     const ui = /\/ui\//gi
 
-                    res.setHeader("location", (location.replace(ui, "/.ory/ui/")))
+                    res.setHeader("location", (location.replace(ui, "/.ory/ui/").replaceAll("https://"+oryDomain, "https://"+localDomain)))
                 }
                 // @ts-ignore
                 return response.replaceAll("https://"+oryDomain, "https://"+localDomain+"/.ory")

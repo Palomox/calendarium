@@ -28,6 +28,7 @@ function createProxy(localDomain: string) {
         },
         on: {
             proxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
+                const response = responseBuffer.toString('utf8');
 
                 let location = proxyRes.headers["location"]
 
@@ -37,14 +38,8 @@ function createProxy(localDomain: string) {
 
                     res.setHeader("location", (location.replace(ui, "/.ory/ui/").replaceAll("https://"+oryDomain, "https://"+localDomain)))
                 }
-
-                const noAssets = new RegExp("https:\\/\\/"+oryDomain+"\\/\\w*\\/(?!assets)","gi")
-                for (let line in responseBuffer){
-                    if(noAssets.test(line)){
-                        line.replace("https://"+oryDomain, "https://"+localDomain+"/.ory")
-                    }
-                }
-                return responseBuffer.toString('utf8');
+                // @ts-ignore
+                return response.replaceAll("https://"+oryDomain, "https://"+localDomain+"/.ory")
             }),
         },
 

@@ -2,7 +2,7 @@ import {VercelRequest, VercelResponse} from "@vercel/node";
 import * as proxy from "./_oryProxy.js";
 
 
-const localDomain = process.env.VERCEL_ENV != 'production' ? process.env.VERCEL_URL : "calendarium.vercel.app";
+const localDomain = process.env.VERCEL_ENV != 'production' ? process.env.VERCEL_URL : process.env.VITE_VERCEL_DOMAIN;
 const oryDomain = process.env.VITE_ORY_DOMAIN;
 function handler(
     request: VercelRequest,

@@ -67,10 +67,10 @@ router.beforeEach(async () => {
             session.value = result.data
 
             ory.createBrowserLogoutFlow({returnTo: window.location.origin}).then(({data}) => {
-                logoutUrl.value = data.logout_url.replace("https://"+import.meta.env.VITE_ORY_DOMAIN, "https://"+window.location.origin+"/.ory/")
+                logoutUrl.value = data.logout_url
             })
         } catch (e) {
-            window.location.href = "/.ory/ui/login" + (vercelEnv == 'development' ? '' : '?return_to='+window.location.href)
+            window.location.href = import.meta.env.VITE_ORY_DOMAIN+"/ui/login" + (vercelEnv == 'development' ? '' : '?return_to='+window.location.href)
         }
     }
 })

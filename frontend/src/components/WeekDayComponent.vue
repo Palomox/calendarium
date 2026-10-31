@@ -1,5 +1,5 @@
 <template>
-<div class="w-full h-full border-b self-start border-gray-700 border-t m-0.5 xl:m-2 flex flex-col items-center">
+<div class="w-full h-full self-start border-gray-700 border-t border-b border-r m-0.5 xl:m-2 flex flex-col items-center" :style="isLast? '' : 'border-right-style: dashed;'" :class="isFirst? 'border-l' : '' " >
   <span class="text-3xl border-b xl:border-b-2 border-gray-700 w-full text-center  hover:cursor-default" :style="dayStyle" @click="open = true">
     <span ref="today" :textContent="props.day"/>
   </span>
@@ -54,6 +54,13 @@ const props = defineProps<{
 
   let dayString = props.day+"-"+props.month+"-"+props.year;
 
+  const isFirst = computed(() => {
+    return dayString == useEventStore().interval.startDate;
+  });
+
+  const isLast = computed(() => {
+    return dayString == useEventStore().interval.endDate;
+  });
 
   function togglePopup(){
     open.value = !open.value

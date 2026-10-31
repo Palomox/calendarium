@@ -1,5 +1,5 @@
 <template>
-<nav class="bg-zinc-700 fixed shadow shadow-2xl shadow-black text-white items-center lg:h-16 h-8 top-0 z-[1000] w-full flex flex-row lg:gap-4 gap-1">
+<nav class="bg-zinc-700 sticky shadow shadow-xl shadow-black text-white items-center lg:max-h-16 max-h-8 top-0 w-full flex flex-row lg:gap-4 gap-1">
   <button ref="entrypoint" @click="menuOpened = true" class="text-white lg:text-5xl sm:text-xl md:text-xl p-2 pl-5 font-bold flex-wrap w-auto" :textContent="appName"/>
   <teleport to="#navpopuplayer">
     <popup-component :style="popupPosition" class="absolute pointer-events-auto" v-if="menuOpened" @close_popup="toggleMenu" >
@@ -31,7 +31,7 @@
     </select>
   <!-- /div-->
   <!-- Week -->
-  <input v-if="useViewStore().mode=='week'" :value="useViewStore().week" @change="useViewStore().setWeek((<any>$event).target.value); refreshPath()" type="date" step="7" min="3-1-2022" class="h-3/4 rounded rounded-md text-black mr-2"/>
+  <input v-if="useViewStore().mode=='week'" :value="DateUtils.getStandardString(useViewStore().week.startingDay)" @change="(event: any) => {useViewStore().setWeek(new Date(<string>event.target.value)); refreshPath()}" type="date" step="7" min="2022-01-03" class="h-3/4 rounded rounded-md text-black mr-2"/>
 </nav>
 </template>
 <script setup lang="ts">

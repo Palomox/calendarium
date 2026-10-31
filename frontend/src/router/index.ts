@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import {useViewStore} from "@/stores/viewstore";
 import {logoutUrl, ory, session} from "@/auth/auth";
 import {vercelEnv} from "@/main";
+import {DateUtils} from "@/libs/dateutils.ts"
 
 export function refreshPath() {
     let viewStore = useViewStore();
@@ -14,7 +15,7 @@ export function refreshPath() {
             router.push("/year/" + viewStore.month.year + "/month/" + viewStore.month.month);
             break;
         case "week":
-            router.push("/year/" + viewStore.week.year+"/week/"+viewStore.week.week);
+            router.push("/week/"+  DateUtils.getStandardString(viewStore.week.startingDay));
     }
 }
 
@@ -42,9 +43,9 @@ const router = createRouter({
         },
         {
             name: "Week view",
-            path: "/year/:year(\\d+)/week/:week(\\d+)",
+            path: "/week/:week(\\d+-\\d+-\\d+)",
             component: () => import('../views/WeekView.vue'),
-            props: route => ({})
+            props: route => ({week: new Date(<string>route.params.week)})
         },
         {
             name: "Edit Event Types",

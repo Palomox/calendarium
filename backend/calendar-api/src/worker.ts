@@ -1,6 +1,6 @@
 import {alterEvent, deleteEvent, getEvents} from "./services/EventsService";
 
-import {createCors, error, json, RequestLike, Router, withContent} from "itty-router";
+import {cors, error, json, Router, withContent} from "itty-router";
 import authenticate from "./middleware/ory";
 import {alterEventType, deleteEventType, getEventTypes} from "./services/EventTypeService";
 import {alterPeriod, deletePeriod, getPeriods} from "./services/PeriodsService";
@@ -16,14 +16,23 @@ export interface Env {
 }
 
 
-const router = Router()
 
-const {preflight, corsify} = createCors({
-	methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-	headers: {
-		"Access-Control-Allow-Credentials": "true"
+const {preflight, corsify} = cors({
+	allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+	credentials: true,
+	origin: "*",
+	allowHeaders: {
+		"Access-Control-Allow-Credentials": "true",
+		"Access-Control-Allow-Origin": "*"
 	}
 })
+
+const router = Router({
+	before: [preflight],
+	catch: error,
+	finally: [json, corsify]
+})
+
 router
 	/*
 		Debug test
@@ -62,11 +71,4 @@ router
 	.all("*", (req) => {return error(404)})
 
 
-export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-		let rawResponse = await router.handle(request, env, ctx);
-		let response = corsify(json(rawResponse))
-
-		return response;
-		},
-};
+export default { ...router }

@@ -1,5 +1,5 @@
 <template>
-<div class="z-[100] p-2 fixed rounded-md bg-zinc-700 left-0 right-0 ml-auto mr-auto top-0 bottom-0 mt-auto mb-auto h-min lg:w-1/2 w-3/4">
+<div class="z-[100] p-2 shadow-md fixed rounded-md bg-neutral-800 left-0 right-0 ml-auto mr-auto top-0 bottom-0 mt-auto mb-auto h-min lg:w-1/2 w-3/4">
   <key-press-listener key-code="Escape" @pressed="closePopup"/>
   <button @click="closePopup" class="w-8 h-8 close-button right-2 absolute">
     <font-awesome-icon icon="fa-solid fa-xmark"/>

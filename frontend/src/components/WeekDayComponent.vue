@@ -181,6 +181,4 @@ const props = defineProps<{
 div>div{
   scrollbar-width: thin;
 }
-
-
 </style>

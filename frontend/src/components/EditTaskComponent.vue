@@ -1,11 +1,11 @@
 <template>
   <form @submit.prevent="editTask()" class="m-auto flex flex-col gap-1 w-1/2 mb-5">
-    <label class="text-5xl text-center" v-text="props.task.new != undefined ? 'Crear tarea' : 'Editar tarea'"/>
+    <label class="text-4xl text-center text-neutral-300" v-text="props.task.new != undefined ? 'Crear tarea' : 'Editar tarea'"/>
     <label>Fecha</label>
     <input v-model="taskObj.date" class="rounded-md h-8 p-1" type="date">
     <label>Descripción</label>
     <input v-model="taskObj.label" class="rounded-md h-8 p-1" type="text">
-    <input class="regular-button h-10 mt-8" :value="props.task.new != undefined ? 'Crear tarea' : 'Editar tarea'" type="submit">
+    <input class="regular-button h-8 mt-8" :value="props.task.new != undefined ? 'Crear tarea' : 'Editar tarea'" type="submit">
   </form>
 
 </template>
@@ -65,8 +65,12 @@ function editTask(){
 }
 </script>
 <style scoped>
+@import "tailwindcss";
 label{
   @apply mt-2;
+}
+input:not([type="submit"]) {
+  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-700;
 }
 
 </style>

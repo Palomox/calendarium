@@ -29,18 +29,17 @@
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@tsconfig/node20": "^20.1.10",
     "@types/node": "^22.20.5",
     "@vitejs/plugin-vue": "^6.0.10",
-    "@vue/tsconfig": "^0.9.1",
     "@vue/devtools-api": "^8.2.1",
-    "autoprefixer": "^10.4.14",
+    "@vue/tsconfig": "^0.9.1",
     "concurrently": "^8.2.1",
-    "npm-run-all": "^4.1.5",
-    "postcss": "^8.5.32",
-    "tailwindcss": "^3.4.19",
-    "typescript": "^5.3.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.5",
+    "npm-run-all": "^4.1.5",
     "vite-plugin-node-polyfills": "^0.28.0",
     "vue-tsc": "^3.3.14"
   }

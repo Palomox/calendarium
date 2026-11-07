@@ -8,6 +8,8 @@ jobs:
     name: Deploy backend to Cloudflare Workers
     runs-on: ubuntu-latest
     steps:
+      - name: debug
+        run: "pwd && ls"
       - name: Deploy to Cloudflare Workers with Wrangler
         uses: cloudflare/wrangler-action@v3.1.0
         with:

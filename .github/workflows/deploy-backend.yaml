@@ -7,6 +7,7 @@ jobs:
   deploy_backend:
     name: Deploy backend to Cloudflare Workers
     runs-on: ubuntu-latest
+    environment: Production
     steps:
       - uses: actions/checkout@v6.0.0
         name: Check out source

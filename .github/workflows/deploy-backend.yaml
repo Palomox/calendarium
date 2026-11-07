@@ -1,0 +1,16 @@
+name: Deploy to production host
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy_backend:
+    name: Deploy backend to Cloudflare Workers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Cloudflare Workers with Wrangler
+        uses: cloudflare/wrangler-action@v3.1.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACC_ID }}
+          workingDirectory: backend

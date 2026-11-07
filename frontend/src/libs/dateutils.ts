@@ -11,6 +11,13 @@ export class DateUtils{
         return date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()
     }
 
+    // Returns YYYY-MM-DD date
+    static getStandardString(date: Date) :string {
+        const offset = date.getTimezoneOffset();
+        date = new Date(date.getTime() - (offset*60*1000))
+        return date.toISOString().substring(0, 10)
+    }
+
     static getFollowing12Months() {
         let date = new Date(Date.now());
         let months: number[] = [];

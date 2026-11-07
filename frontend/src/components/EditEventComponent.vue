@@ -1,12 +1,12 @@
 <template>
 <form @submit.prevent="modifyEvent()" class="m-auto flex flex-col gap-1 w-1/2 mb-5">
-  <label class="text-5xl text-center" v-text="props.event.new != undefined ? 'Crear evento' : 'Editar evento'"/>
+  <label class="text-4xl text-center text-neutral-300" v-text="props.event.new != undefined ? 'Crear evento' : 'Editar evento'"/>
   <label>Fecha</label>
-  <input v-model="eventObj.date" class="rounded-md h-8 p-1" type="date">
+  <input v-model="eventObj.date" type="date">
   <label>Descripción</label>
-  <input v-model="eventObj.label" class="rounded-md h-8 p-1" type="text">
+  <input v-model="eventObj.label" type="text">
   <label>Tipo</label>
-  <select :style="'color: '+eventStore.eventTypes.event_types[eventObj.type].color+';'" v-model="eventObj.type" class="rounded-md h-8 p-1 bg-zinc-800">
+  <select :style="'color: '+eventStore.eventTypes.event_types[eventObj.type].color+';'" v-model="eventObj.type">
     <option :key="type.name" :value="type.name" v-text="type.name" :style="'color: '+type.color+';'" v-for="type in eventStore.eventTypes.event_types" />
   </select>
   <input class="regular-button h-10 mt-8" :value="props.event.new != undefined ? 'Crear evento' : 'Editar evento'" type="submit">
@@ -57,7 +57,16 @@
   }
 </script>
 <style scoped>
+@reference "@/assets/main.css"
 label{
   @apply mt-2;
 }
+input:not([type="submit"]) {
+  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-700;
+}
+
+select {
+  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-700;
+}
+
 </style>

@@ -1,6 +1,6 @@
 import  {RequestWithMiddleware} from "../types";
 import {Env} from "../worker";
-import {error} from "itty-router";
+import {error, json} from "itty-router";
 import {getPostgresClient} from "../utils";
 
 export async function getEventTypes(request: RequestWithMiddleware, env: Env, ctx: ExecutionContext) {
@@ -14,7 +14,6 @@ export async function getEventTypes(request: RequestWithMiddleware, env: Env, ct
 	}
 
 	ctx.waitUntil(client.end())
-
 	return Object.fromEntries(eventTypes)
 }
 

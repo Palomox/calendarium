@@ -20,9 +20,7 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
 </template>
 
 <style>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@reference "assets/main.css";
 
 img.emoji {
   height: 1.5em;
@@ -32,12 +30,8 @@ img.emoji {
 }
 
 html{
-  @apply bg-zinc-900 text-white;
+  @apply bg-neutral-900 text-white;
   scrollbar-width: thin;
-}
-
-input{
-  @apply text-black;
 }
 
 .close-button {

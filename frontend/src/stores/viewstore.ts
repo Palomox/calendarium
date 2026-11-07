@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {type Ref, ref} from "vue";
 import type {CalendarEvent, CalendarTask} from "@/libs/types";
+import {DateUtils} from "@/libs/dateutils.ts";
 
 export const newEvent : CalendarEvent= {
     type: "global",
@@ -23,9 +24,8 @@ export const useViewStore = defineStore('view', () => {
         year: 2023,
         month: 1
     });
-    const week = ref({
-        year: 2023,
-        week: 3
+    const week :Ref<{ startingDay: Date }> = ref({
+        startingDay: new Date(),
     })
 
     const editingPopup = ref<'none' | 'event' | 'task'>("none");
@@ -53,8 +53,9 @@ export const useViewStore = defineStore('view', () => {
     function setMonthYear(newYear: number){
         month.value.year = newYear;
     }
-    function setWeek(newWeek : {year: number, week: number}) {
-        week.value = newWeek;
+    // Weeks are referred by their starting monday (as that's the sketchy date picker method used)
+    function setWeek(startingDate : Date) {
+        week.value.startingDay = startingDate;
     }
     return {mode, setMode, yearInterval, month, week, editingPopup, editingEvent, editingTask, setYearInterval, setFullMonth, setMonthMonth, setMonthYear, setWeek};
 });

@@ -4,6 +4,7 @@ import router from './router'
 import {createPinia} from "pinia";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faCircleXmark} from "@fortawesome/free-regular-svg-icons";
+import "@/assets/main.css";
 
 import "vue-toastification/dist/index.css"
 import type {PluginOptions} from "vue-toastification/dist/types/types";

@@ -43,6 +43,6 @@ import {onMounted, onUnmounted, ref} from "vue";
   margin-left: -2rem;
   border-width: 1rem;
   border-style: solid;
-  border-color: transparent theme('colors.zinc.800') transparent transparent;
+  border-color: transparent var(--color-zinc-800) transparent transparent;
 }
 </style>

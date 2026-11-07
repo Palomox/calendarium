@@ -5,7 +5,7 @@
   </div>
   <div class="week-grid mx-8 grid grid-cols-7 grid-rows-[4rem_5rem_1fr] justify-items-center items-center place-content-stretch gap-x-0">
     <span class="w-full text-center row-start-1 row-span-1 text-xl  xl:text-4xl border-l border-r border-neutral-600" v-for="month of monthTitle" :style=" 'grid-column: '+month.start+'/ span '+month.span+';' " :textContent="StringUtils.capitalize(DateUtils.getMonth(month.month))"/>
-    <span class="row-span-1 col-span-1 row-start-2 text-red-700 text-center lg:text-4xl xl:text-5xl lg:m-10 text-xl" :style="'grid-column-start: '+day+';'" v-for="day in 7" :textContent="DateUtils.getDayInitial(day)"/>
+    <span class="row-span-1 col-span-1 row-start-2 text-red-700 text-center lg:m-10 lg:text-4xl xl:text-5xl text-xl" :style="'grid-column-start: '+day+';'" v-for="day in 7" :textContent="DateUtils.getDayInitial(day)"/>
     <week-day-component class="row-start-3 row-span-1" v-for="date of weekDays" :year="date.getFullYear()" :month="date.getMonth()+1" :day="date.getDate()"/>
   </div>
 </template>

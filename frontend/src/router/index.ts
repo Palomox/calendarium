@@ -32,33 +32,27 @@ const router = createRouter({
         {
             name: "Year view",
             path: "/year/:year",
-            component: () => import('../views/YearView.vue'),
+            component: () => import('@/views/YearView.vue'),
             props: route => ({year: route.params.year == "12months" ? route.params.year : Number(route.params.year)})
         },
         {
             name: "Month view",
             path: "/year/:year(\\d+)/month/:month(\\d+)",
-            component: () => import('../views/MonthView.vue'),
+            component: () => import('@/views/MonthView.vue'),
             props: route => ({year: Number(route.params.year), month: Number(route.params.month)})
         },
         {
             name: "Week view",
             path: "/week/:week(\\d+-\\d+-\\d+)",
-            component: () => import('../views/WeekView.vue'),
+            component: () => import('@/views/WeekView.vue'),
             props: route => ({week: new Date(<string>route.params.week)})
         },
         {
-            name: "Edit Event Types",
-            path: "/event_types",
+            name: "Options",
+            path: "/options",
             meta: {config: true},
-            component: () => import('../views/EditEventTypesView.vue')
+            component: () => import('@/views/OptionsView.vue')
         },
-        {
-            name: "Edit Periods",
-            path: "/periods",
-            meta: {config: true},
-            component: () => import('../views/EditPeriodsView.vue')
-        }
     ]
 })
 router.beforeEach(async () => {

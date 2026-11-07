@@ -6,9 +6,7 @@ import EditPopupComponent from "@/components/EditPopupComponent.vue";
 import EditEventComponent from "@/components/EditEventComponent.vue";
 import EditTaskComponent from "@/components/EditTaskComponent.vue";
 </script>
-
 <template>
-  <div id="navpopuplayer" class="z-[1005] left-0 right-0 top-0 fixed pointer-events-none"/>
   <navbar-component/>
   <div id="popuplayer" class="z-[500] left-0 right-0 top-0 bottom-0 absolute pointer-events-none">
     <edit-popup-component class="pointer-events-auto" v-if="useViewStore().editingPopup != 'none'">
@@ -16,11 +14,11 @@ import EditTaskComponent from "@/components/EditTaskComponent.vue";
       <edit-task-component :task="useViewStore().editingTask" v-if="useViewStore().editingPopup == 'task' "/>
     </edit-popup-component>
   </div>
-  <router-view class="lg:mt-16 mt-8 mx-auto" :key="$route.fullPath"/>
+  <router-view class="mt-1" :key="$route.fullPath"/>
 </template>
 
 <style>
-@reference "assets/main.css";
+@reference "@/assets/main.css";
 
 img.emoji {
   height: 1.5em;

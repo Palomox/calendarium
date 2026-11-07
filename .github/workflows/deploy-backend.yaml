@@ -8,8 +8,8 @@ jobs:
     name: Deploy backend to Cloudflare Workers
     runs-on: ubuntu-latest
     steps:
-      - name: debug
-        run: "pwd && ls"
+      - uses: actions/checkout@v6.0.0
+        name: Check out source
       - name: Deploy to Cloudflare Workers with Wrangler
         uses: cloudflare/wrangler-action@v3.1.0
         with:

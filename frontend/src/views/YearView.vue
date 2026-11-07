@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row w-3/4 gap-4 flex-wrap">
+  <div class="flex flex-row w-fit gap-4 gap-y-10 flex-wrap ml-auto">
     <month-component v-for="index of 12" :month="years.months[index-1]" :year="years.years[index-1]" :big="false" />
   </div>
 </template>

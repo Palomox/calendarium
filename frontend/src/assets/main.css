@@ -2,21 +2,23 @@
 
 @theme {
     --font-titlebar: "Farro";
-    --animate-bottom: bottomUp 0.5s linear 0s normal 1 forwards;
+    --animate-bottom: bottomOpen 0.5s linear 0s normal 1 forwards;
 
-    @keyframes bottomUp {
+    @keyframes bottomOpen {
         0% {
-            border-bottom-width: 0;
-            margin-bottom: 0;
+            transform-box: border-box;
+            transform-origin: center;
+            transform: scaleX(0);
         }
         50% {
-            border-bottom-width: 1px;
-            margin-bottom: -1px;
+            transform-box: border-box;
+            transform-origin: center;
+            transform: scaleX(0.5);
         }
         100% {
-            border-bottom-width: 2px;
-            margin-bottom: -2px;
-
+            transform-box: border-box;
+            transform-origin: center;
+            transform: scaleX(1);
         }
     }
 }

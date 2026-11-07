@@ -21,12 +21,22 @@ export const useViewStore = defineStore('view', () => {
     const mode = ref('year');
     const yearInterval = ref('12months');
     const month = ref({
-        year: 2023,
-        month: 1
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
     });
     const week :Ref<{ startingDay: Date }> = ref({
-        startingDay: new Date(),
+        startingDay: mondayThisWeek(),
     })
+
+    function mondayThisWeek(): Date {
+        let today = new Date();
+        if (today.getDay() == 0 ){ // Sunday
+            today.setDate(today.getDate() - 6);
+        } else { // Any other days
+            today.setDate(today.getDate() - today.getDay()+1);
+        }
+        return today;
+    }
 
     const editingPopup = ref<'none' | 'event' | 'task'>("none");
 

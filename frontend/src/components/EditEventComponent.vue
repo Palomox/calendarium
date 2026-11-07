@@ -62,11 +62,11 @@ label{
   @apply mt-2;
 }
 input:not([type="submit"]) {
-  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-700;
+  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-600;
 }
 
 select {
-  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-700;
+  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-600;
 }
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-zinc-700 rounded-md p-4 flex">
+  <div class="bg-neutral-800 rounded-md p-4 flex">
     <div class="flex flex-col gap-2">
       <div>
         <span v-if="!editing" v-text="period.name" class="text-2xl font-bold mr-2"/>
@@ -156,5 +156,10 @@ function deletePeriod(){
 
 </script>
 <style scoped>
+@reference "@/assets/main.css";
+
+input:not([type="color"]) {
+  @apply rounded-md h-8 p-1 bg-neutral-800 border-1 border-neutral-600 text-white;
+}
 
 </style>

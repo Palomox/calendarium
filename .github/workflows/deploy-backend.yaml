@@ -13,4 +13,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACC_ID }}
-          workingDirectory: backend
+          workingDirectory: "backend/calendar-api/"
